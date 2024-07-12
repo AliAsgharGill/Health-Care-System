@@ -23,7 +23,7 @@ const Signup = () => {
           </div>
           <SignupForm props="my-10" />
           <div>
-            <p className="text-[#76828D] mt-20 " >@carepulse copyright</p>
+            <p className="text-[#76828D] mt-20 ">@carepulse copyright</p>
           </div>
         </div>
         <div>
@@ -32,7 +32,7 @@ const Signup = () => {
             alt="signup"
             width={600}
             height={1024}
-            className="md:m-4 md:ml-10 md:p-16 "
+            className=" "
           />
         </div>
       </div>
