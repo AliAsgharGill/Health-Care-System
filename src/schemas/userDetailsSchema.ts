@@ -1,43 +1,16 @@
 import { z } from "zod";
 
-export const PersonalInfoSchema = z.object({
-  full_name: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-  email_address: z
-    .string()
-    .email("Must be a valid email")
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-  phone_number: z
-    .string()
-    .min(10, "Must be 10 characters long")
-    .max(10, "Must be 10 characters long"),
-  date_of_birth: z.date(),
-  gender: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-  address: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-  occupation: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-  emergency_contact_name: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-  guardian_number: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-});
+export const UserDetailsSchema = z.object({
+  full_name: z.string().min(2, "Must be 2 characters long").max(50),
+  email_address: z.string().email(),
+  phone_number: z.string().min(7),
+  date_of_birth: z.string(),
+  gender: z.union([z.literal("male"), z.literal("female"), z.literal("other")]),
+  address: z.string().min(5),
+  occupation: z.string().min(3),
+  emergency_contact_name: z.string().min(2),
+  emergency_contact_number: z.string().min(7),
 
-export const MedicalInfoSchema = z.object({
   primary_care_physician: z
     .string()
     .min(3, "Must be 3 characters long")
@@ -66,9 +39,6 @@ export const MedicalInfoSchema = z.object({
     .string()
     .min(3, "Must be 3 characters long")
     .max(20, "Must be 20 characters long"),
-});
-
-export const IdentificationInfoSchema = z.object({
   identification_type: z
     .string()
     .min(3, "Must be 3 characters long")
@@ -81,17 +51,7 @@ export const IdentificationInfoSchema = z.object({
     .string()
     .min(3, "Must be 3 characters long")
     .max(20, "Must be 20 characters long"),
-});
-
-export const ConstantInfoSchema = z.object({
   receive_treatment: z.boolean(),
   share_medical_info: z.boolean(),
   privacy_policy: z.boolean(),
-});
-
-export const UserDetailsSchema = z.object({
-  personal_info: PersonalInfoSchema,
-  medical_info: MedicalInfoSchema,
-  identification_info: IdentificationInfoSchema,
-  constant_info: ConstantInfoSchema,
 });
