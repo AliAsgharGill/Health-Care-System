@@ -25,7 +25,7 @@ import {
 } from "../ui/form";
 
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { OtpFormValues } from "../../types/otpFormValues";
+import { OtpFormValues } from "../../types/otpFormTypes";
 import { OtpSchema } from "@/schemas/otpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "../ui/use-toast";

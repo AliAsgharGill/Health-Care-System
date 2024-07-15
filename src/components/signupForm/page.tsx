@@ -11,7 +11,7 @@ import axios from "axios";
 import { useToast } from "../ui/use-toast";
 import { Loader, Mail, Phone, User } from "lucide-react";
 
-import { SignupFormValues } from "@/types/signupFormValues";
+import { SignupFormValues } from "@/types/signupFormTypes";
 import OtpForm from "../otpForm/page";
 
 const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
@@ -28,8 +28,8 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
     mode: "onChange",
     resolver: zodResolver(SignupSchema),
   });
-  const { register, handleSubmit, formState } = form;
-  const { errors, isDirty, isValid, isSubmitSuccessful } = formState;
+  const { register, handleSubmit, formState, reset } = form;
+  const { errors, isDirty, isValid, isSubmitSuccessful, } = formState;
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     setIsSubmitting(true);
@@ -45,6 +45,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
         title: "Success",
         variant: "default",
       });
+      reset();
       setIsDialogOpen(true); // Open the dialog on successful submission
     } catch (error) {
       console.log("Error Registering User:", error);
@@ -115,13 +116,13 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
                 <div className="absolute left-0 pl-3 flex items-center pointer-events-none">
                   <Phone className="h-5 mt-1 w-5 text-white" />
                 </div>
-              <Input
-                id="phoneNumber"
-                {...register("phone_number", { required: true })}
-                className="mt-1 w-full pl-10 outline-[#0a95ff] border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
-                type="tel"
-                placeholder="+923123456789"
-              />
+                <Input
+                  id="phoneNumber"
+                  {...register("phone_number", { required: true })}
+                  className="mt-1 w-full pl-10 outline-[#0a95ff] border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
+                  type="tel"
+                  placeholder="+923123456789"
+                />
               </div>
               <p className=" text-sm text-red-500 my-1">
                 {errors.phone_number?.message}
