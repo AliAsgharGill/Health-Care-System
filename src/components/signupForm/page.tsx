@@ -31,12 +31,10 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-
-type SignupFormValues = {
-  full_name: string;
-  email: string;
-  phone_number: string;
-};
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { SignupFormValues } from "@/types/singupFormValues";
+import { OtpFormValues } from "../../types/otpFormValues";
+import { OtpSchema } from "@/schemas/otpSchema";
 
 const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
   const { toast } = useToast();
@@ -52,9 +50,28 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
     mode: "onChange",
     resolver: zodResolver(SignupSchema),
   });
-
   const { register, handleSubmit, formState } = form;
   const { errors, isDirty, isValid } = formState;
+
+  const formOTP = useForm<OtpFormValues>({
+    defaultValues: {
+      otp: "",
+    },
+    mode: "onChange",
+    resolver: zodResolver(OtpSchema),
+  });
+
+  const {
+    register: registerOTP,
+    handleSubmit: handleSubmitOTP,
+    formState: formStateOTP,
+  } = formOTP;
+
+  const {
+    errors: errorsOTP,
+    isDirty: isDirtyOTP,
+    isValid: isValidOTP,
+  } = formStateOTP;
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     setIsSubmitting(true);
@@ -63,6 +80,33 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
       const response = await axios.post<SignupFormValues>(
         // Todo: need to change url
         "https://api.shadcn.com/preview-auth/signup",
+        data
+      );
+      toast({
+        description: "Form submitted successfully!",
+        title: "Success",
+        variant: "default",
+      });
+      setIsDialogOpen(true); // Open the dialog on successful submission
+    } catch (error) {
+      console.log("Error Submitting Form:", error);
+      toast({
+        title: "Error",
+        description: "Error Submitting Form",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const onSubmitOTP: SubmitHandler<OtpFormValues> = async (data) => {
+    setIsSubmitting(true);
+    console.log("Form Submitted:", data);
+    try {
+      const response = await axios.post<OtpFormValues>(
+        // Todo: need to change url
+        "https://api.shadcn.com/preview-auth/otp",
         data
       );
       toast({
@@ -166,38 +210,85 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
               Please enter the OTP sent to your registered mobile number.
             </DialogDescription>
             <DialogDescription className="flex justify-center ">
-              <Form {...form}>
+              <Form {...formOTP}>
                 <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="w-2/3 space-y-6"
+                  onSubmit={formOTP.handleSubmit(onSubmitOTP)}
+                  className="w-full flex flex-col space-y-6"
                 >
                   <FormField
-                    control={form.control}
-                    name="pin"
+                    control={formOTP.control}
+                    name="otp"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>One-Time Password</FormLabel>
                         <FormControl>
-                          <InputOTP maxLength={6} {...field}>
-                            <InputOTPGroup>
-                              <InputOTPSlot index={0} />
-                              <InputOTPSlot index={1} />
-                              <InputOTPSlot index={2} />
-                              <InputOTPSlot index={3} />
-                              <InputOTPSlot index={4} />
-                              <InputOTPSlot index={5} />
-                            </InputOTPGroup>
-                          </InputOTP>
+                          <div>
+                            <InputOTP
+                              maxLength={6}
+                              {...field}
+                              pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                            >
+                              <InputOTPGroup
+                                className="w-full flex justify-center items-center "
+                                {...registerOTP("otp")}
+                              >
+                                <InputOTPSlot
+                                  {...registerOTP("otp")}
+                                  index={0}
+                                  className="active:border-[#24AE7C] border-2  font-extrabold text-[#24AE7C] border-[#24AE7C] "
+                                />
+                                <InputOTPSlot
+                                  index={1}
+                                  {...registerOTP("otp")}
+                                  className="active:border-[#24AE7C] border-2  font-extrabold text-[#24AE7C] border-[#24AE7C] "
+                                />
+                                <InputOTPSlot
+                                  index={2}
+                                  {...registerOTP("otp")}
+                                  className="active:border-[#24AE7C] border-2  font-extrabold text-[#24AE7C] border-[#24AE7C] "
+                                />
+                                <InputOTPSlot
+                                  index={3}
+                                  className="active:border-[#24AE7C] border-2  font-extrabold text-[#24AE7C] border-[#24AE7C] "
+                                />
+                                <InputOTPSlot
+                                  index={4}
+                                  className="active:border-[#24AE7C] border-2  font-extrabold text-[#24AE7C] border-[#24AE7C] "
+                                />
+                                <InputOTPSlot
+                                  index={5}
+                                  className="active:border-[#24AE7C] border-2  font-extrabold text-[#24AE7C] border-[#24AE7C] "
+                                />
+                              </InputOTPGroup>
+                            </InputOTP>
+                            <p className=" text-sm text-red-500 my-1 text-center">
+                              {errorsOTP.otp?.message}
+                            </p>
+                          </div>
                         </FormControl>
                         <FormDescription>
-                          Please enter the one-time password sent to your phone.
+                          <Button
+                            type="submit"
+                            disabled={!isDirtyOTP || !isValidOTP}
+                            className={`${
+                              isValidOTP ? "bg-[#24AE7C]" : "bg-gray-300"
+                            } w-full mt-4 text-white font-semibold hover:bg-[#24AE7C]  `}
+                          >
+                            {!isValidOTP ? (
+                              "Please enter OTP"
+                            ) : isSubmitting ? (
+                              <div className="flex items-center justify-center font-bold">
+                                <Loader className="mr-2 h-4 w-4 animate-spin" />{" "}
+                                Submitting
+                              </div>
+                            ) : (
+                              "Verify"
+                            )}
+                          </Button>{" "}
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  <Button type="submit">Submit</Button>
                 </form>
               </Form>
             </DialogDescription>
