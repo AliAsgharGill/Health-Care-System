@@ -4,14 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  Form,
-} from "../ui/form";
+import { Form } from "../ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignupSchema } from "@/schemas/signupSchema";
 import axios from "axios";
 import { useToast } from "../ui/use-toast";
-import { Loader } from "lucide-react";
+import { Loader, Mail, Phone, User } from "lucide-react";
 
 import { SignupFormValues } from "@/types/signupFormValues";
 import OtpForm from "../otpForm/page";
@@ -65,52 +63,71 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
     <>
       <Form {...form}>
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
+          {/* Full Name */}
           <div className={`flex flex-col gap-4 ${props}`}>
             <div>
               <Label htmlFor="fullName" className="text-[#ABB8C4]">
                 Full Name
               </Label>
-              <Input
-                id="fullName"
-                {...register("full_name", { required: true })}
-                className="mt-1 border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
-                type="text"
-                placeholder="Ali Asghar"
-              />
+              <div className="relative flex items-center ">
+                <div className="absolute left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5mt-1  w-5 text-white" />
+                </div>
+                <Input
+                  id="fullName"
+                  {...register("full_name", { required: true })}
+                  className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white "
+                  type="text"
+                  placeholder="Ali Asghar"
+                />
+              </div>
               <p className=" text-sm text-red-500 my-1">
                 {errors.full_name?.message}
               </p>
             </div>
+            {/* Email */}
             <div>
               <Label htmlFor="email" className="text-[#ABB8C4]">
                 Email Address
               </Label>
-              <Input
-                id="email"
-                {...register("email", { required: true })}
-                className="mt-1 border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
-                type="text"
-                placeholder="example@gmail.com"
-              />
+              <div className="relative flex items-center">
+                <div className="absolute left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 mt-1  w-5 text-white" />
+                </div>
+                <Input
+                  id="email"
+                  {...register("email", { required: true })}
+                  className="mt-1 border-2 pl-10 border-transparent focus:border-gradient bg-[#363A3D] text-white"
+                  type="text"
+                  placeholder="example@gmail.com"
+                />
+              </div>
               <p className=" text-sm text-red-500 my-1">
                 {errors.email?.message}
               </p>
             </div>
+            {/* Phone Number */}
             <div>
               <Label htmlFor="phoneNumber" className="text-[#ABB8C4]">
                 Phone number
               </Label>
+              <div className="relative flex items-center ">
+                <div className="absolute left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 mt-1 w-5 text-white" />
+                </div>
               <Input
                 id="phoneNumber"
                 {...register("phone_number", { required: true })}
-                className="mt-1 w-full outline-[#0a95ff] border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
+                className="mt-1 w-full pl-10 outline-[#0a95ff] border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
                 type="tel"
                 placeholder="+923123456789"
               />
+              </div>
               <p className=" text-sm text-red-500 my-1">
                 {errors.phone_number?.message}
               </p>
             </div>
+            {/* Submit Button */}
             <div>
               <Button
                 type="submit"
@@ -133,7 +150,12 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
           </div>
         </form>
       </Form>
-      {isSubmitSuccessful && <OtpForm isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />}
+      {isSubmitSuccessful && (
+        <OtpForm
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+        />
+      )}
     </>
   );
 };

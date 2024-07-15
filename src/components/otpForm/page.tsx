@@ -72,12 +72,12 @@ const OtpForm = ({
         data
       );
       toast({
-        description: "Form submitted successfully!",
+        description: "Verification successful!",
         title: "Success",
         variant: "default",
       });
-      route.push("/");
-      setIsDialogOpen(false); // Open the dialog on successful submission
+      route.push("/userDetails");
+      setIsDialogOpen(false); 
     } catch (error) {
       console.log("Error Verifying OTP:", error);
       toast({
