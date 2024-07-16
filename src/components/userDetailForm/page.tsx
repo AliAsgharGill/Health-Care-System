@@ -77,7 +77,7 @@ const UserDetailsForm = () => {
     resolver: zodResolver(UserDetailsSchema),
   });
 
-  const { handleSubmit, register, formState, reset } = form;
+  const { handleSubmit, register, formState, reset, setValue } = form;
   const { errors, isDirty, isValid, isSubmitSuccessful } = formState;
 
   async function onSubmit(data: z.infer<typeof UserDetailsSchema>) {
@@ -106,6 +106,11 @@ const UserDetailsForm = () => {
 
   const onError = (errors: any) => {
     console.log(errors);
+  };
+
+  const handleDateChange = (selectedDate: Date) => {
+    setDate(selectedDate);
+    setValue("date_of_birth", format(selectedDate, "yyyy-MM-dd"));
   };
 
   return (
@@ -205,10 +210,12 @@ const UserDetailsForm = () => {
                           )}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="flex w-auto flex-col bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white space-y-2 p-2">
+                      <PopoverContent className="flex w-auto flex-col bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] rounded-lg text-white space-y-2 p-2">
                         <Select
                           onValueChange={(value) =>
-                            setDate(addDays(new Date(), parseInt(value)))
+                            handleDateChange(
+                              addDays(new Date(), parseInt(value))
+                            )
                           }
                         >
                           <SelectTrigger className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white ">
@@ -231,43 +238,11 @@ const UserDetailsForm = () => {
                           <Calendar
                             mode="single"
                             selected={date}
-                            onSelect={setDate}
+                            onSelect={handleDateChange}
                           />
                         </div>
                       </PopoverContent>
                     </Popover>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Gender */}
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[#ABB8C4]">Gender</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      {...field}
-                      // className="flex items-center space-x-4"
-                      className=" flex space-x-2  border-[#363A3D] placeholder:text-[#76828D] text-white"
-                    >
-                      <div className="flex justify-around items-center border-[#363A3D] placeholder:text-[#76828D] text-white border-dashed border-2 p-2 px-4 rounded">
-                        <RadioGroupItem value="male" id="male" />
-                        <Label htmlFor="male">Male</Label>
-                      </div>
-                      <div className="flex justify-around items-center border-[#363A3D] placeholder:text-[#76828D] text-white border-dashed border-2 p-2 px-4 rounded">
-                        <RadioGroupItem value="female" id="female" />
-                        <Label htmlFor="female">Female</Label>
-                      </div>
-                      <div className="flex justify-around items-center border-[#363A3D] placeholder:text-[#76828D] text-white border-dashed border-2 p-2 px-4 rounded">
-                        <RadioGroupItem value="other" id="other" />
-                        <Label htmlFor="other">Other</Label>
-                      </div>
-                    </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
