@@ -46,7 +46,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
         variant: "default",
       });
       reset();
-      setIsDialogOpen(true); // Open the dialog on successful submission
+      setIsDialogOpen(true); 
     } catch (error) {
       console.log("Error Registering User:", error);
       toast({
@@ -54,7 +54,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
         description: "Error Registering User",
         variant: "destructive",
       });
-      setIsDialogOpen(true); // Open the dialog on successful submission
+      setIsDialogOpen(true); 
     } finally {
       setIsSubmitting(false);
     }
@@ -85,7 +85,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
               <p className=" text-sm text-red-500 my-1">
                 {errors.full_name?.message}
               </p>
-            </div>
+            </div>  
             {/* Email */}
             <div>
               <Label htmlFor="email" className="text-[#ABB8C4]">

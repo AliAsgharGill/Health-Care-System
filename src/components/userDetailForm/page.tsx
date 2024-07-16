@@ -77,7 +77,7 @@ const UserDetailsForm = () => {
           </pre>
         ),
       });
-      route.push("/dashboard");
+      route.push("/appointment");
       reset();
     } catch (error) {
       console.log("Getting Error", error);
