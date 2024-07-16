@@ -45,7 +45,7 @@ import Image from "next/image";
 import {
   IdentificationType,
   physicianOptions,
-} from "../../../public/assets/images/data/userFormData";
+} from "../../../public/assets/data/userFormData";
 import { defaultValues } from "./defaultValues";
 
 const UserDetailsForm = () => {

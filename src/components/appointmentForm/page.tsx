@@ -31,7 +31,7 @@ import {
 import { cn } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Loader } from "lucide-react";
-import { physicianOptions } from "../../../public/assets/images/data/userFormData";
+import { physicianOptions } from "../../../public/assets/data/userFormData";
 import OtpForm from "../otpForm/page";
 
 type PhysicianOption = {

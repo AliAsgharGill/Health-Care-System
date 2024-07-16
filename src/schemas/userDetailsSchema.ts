@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   IdentificationType,
   physicianOptions,
-} from "../../public/assets/images/data/userFormData";
+} from "../../public/assets/data/userFormData";
 
 export const UserDetailsSchema = z.object({
   full_name: z.string().min(2, "Must be 2 characters long").max(50),

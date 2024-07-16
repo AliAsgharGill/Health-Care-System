@@ -1,4 +1,4 @@
-import { IdentificationType, physicianOptions } from "../../public/assets/images/data/userFormData";
+import { IdentificationType, physicianOptions } from "../../public/assets/data/userFormData";
 
 export type UserDetailsTypes = {
   full_name: string;
