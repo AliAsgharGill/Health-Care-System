@@ -29,7 +29,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
     resolver: zodResolver(SignupSchema),
   });
   const { register, handleSubmit, formState, reset } = form;
-  const { errors, isDirty, isValid, isSubmitSuccessful, } = formState;
+  const { errors, isDirty, isValid, isSubmitSuccessful } = formState;
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     setIsSubmitting(true);
@@ -46,7 +46,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
         variant: "default",
       });
       reset();
-      setIsDialogOpen(true); 
+      setIsDialogOpen(true);
     } catch (error) {
       console.log("Error Registering User:", error);
       toast({
@@ -54,7 +54,6 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
         description: "Error Registering User",
         variant: "destructive",
       });
-      setIsDialogOpen(true); 
     } finally {
       setIsSubmitting(false);
     }
@@ -85,7 +84,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
               <p className=" text-sm text-red-500 my-1">
                 {errors.full_name?.message}
               </p>
-            </div>  
+            </div>
             {/* Email */}
             <div>
               <Label htmlFor="email" className="text-[#ABB8C4]">
@@ -155,6 +154,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
         <OtpForm
           isDialogOpen={isDialogOpen}
           setIsDialogOpen={setIsDialogOpen}
+          nextRoute="/userDetails"
         />
       )}
     </>

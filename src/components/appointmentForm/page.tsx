@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Loader } from "lucide-react";
 import { physicianOptions } from "../../../public/assets/images/data/userFormData";
+import OtpForm from "../otpForm/page";
 
 type PhysicianOption = {
   value: string;
@@ -42,6 +43,7 @@ type PhysicianOption = {
 const AppointmentForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const form = useForm<AppointmentFormValues>({
     defaultValues: {
@@ -71,11 +73,12 @@ const AppointmentForm: React.FC = () => {
         data
       );
       toast({
-        description: "Appointment booked successfully!",
+        description: "Please verify OTP sent to your phone number!",
         title: "Success",
         variant: "default",
       });
       reset();
+      setIsDialogOpen(true);
     } catch (error) {
       console.log("Error booking appointment:", error);
       toast({
@@ -255,6 +258,12 @@ const AppointmentForm: React.FC = () => {
             )}
           </Button>
         </form>
+        {isSubmitSuccessful && (
+          <OtpForm
+            isDialogOpen={isDialogOpen}
+            setIsDialogOpen={setIsDialogOpen}
+          />
+        )}
       </Form>
     </>
   );

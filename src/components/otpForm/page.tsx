@@ -37,9 +37,11 @@ import { useRouter } from "next/navigation";
 const OtpForm = ({
   isDialogOpen,
   setIsDialogOpen,
+  nextRoute,
 }: {
   isDialogOpen: boolean;
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  nextRoute?: string;
 }) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,7 +55,7 @@ const OtpForm = ({
     resolver: zodResolver(OtpSchema),
   });
 
-  const { register, handleSubmit, formState } = form;
+  const { register, handleSubmit, formState, reset } = form;
 
   const {
     errors: errorsOTP,
@@ -76,8 +78,11 @@ const OtpForm = ({
         title: "Success",
         variant: "default",
       });
-      route.push("/userDetails");
-      setIsDialogOpen(false); 
+      {
+        nextRoute ? route.push({ nextRoute }) : route.refresh();
+      }
+      setIsDialogOpen(false);
+      reset();
     } catch (error) {
       console.log("Error Verifying OTP:", error);
       toast({
@@ -113,11 +118,7 @@ const OtpForm = ({
                       <FormItem>
                         <FormControl>
                           <div>
-                            <InputOTP
-                              maxLength={6}
-                              {...field}
-                              pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-                            >
+                            <InputOTP maxLength={6} {...field}>
                               <InputOTPGroup
                                 className="w-full flex justify-center items-center "
                                 {...register("otp")}
