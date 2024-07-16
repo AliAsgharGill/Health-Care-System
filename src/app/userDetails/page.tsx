@@ -5,8 +5,8 @@ import React from "react";
 const UserDetails = () => {
   return (
     <>
-      <div className="flex justify-around  min-h-screen">
-        <div className="flex w-1/3 flex-col justify md:m-24 md:ml-10 md:p-16  ">
+      <div className="flex justify-evenly   min-h-screen">
+        <div className="flex w-1/3 flex-col justify md:mt-24   ">
           <Image
             src="/assets/images/logo.png"
             alt="logo"

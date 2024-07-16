@@ -39,18 +39,11 @@ export const UserDetailsSchema = z.object({
     .string()
     .min(3, "Must be 3 characters long")
     .max(20, "Must be 20 characters long"),
-  identification_type: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
-  identification_number: z
-    .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
+  identification_type: z.string().min(3, "Must be 3 characters long"),
+  identification_number: z.string().min(3, "Must be 3 characters long"),
   scanned_copy_of_identification_document: z
     .string()
-    .min(3, "Must be 3 characters long")
-    .max(20, "Must be 20 characters long"),
+    .min(3, "Must be 3 characters long"),
   receive_treatment: z.boolean(),
   share_medical_info: z.boolean(),
   privacy_policy: z.boolean(),

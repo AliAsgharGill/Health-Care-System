@@ -1,6 +1,6 @@
 "use client";
 import { UserDetailsTypes } from "@/types/userDetailTypes";
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UserDetailsSchema } from "@/schemas/userDetailsSchema";
 import { z } from "zod";
@@ -21,8 +21,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import axios from "axios";
+import { Loader } from "lucide-react";
+
+import { addDays, format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const UserDetailsForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [date, setDate] = React.useState<Date>();
+
   const form = useForm<z.infer<typeof UserDetailsSchema>>({
     defaultValues: {
       full_name: "",
@@ -59,6 +81,7 @@ const UserDetailsForm = () => {
   const { errors, isDirty, isValid, isSubmitSuccessful } = formState;
 
   async function onSubmit(data: z.infer<typeof UserDetailsSchema>) {
+    setIsSubmitting(true);
     console.log("Form Submitted", data);
     try {
       const response = await axios.post<UserDetailsTypes>(
@@ -76,6 +99,8 @@ const UserDetailsForm = () => {
       reset();
     } catch (error) {
       console.log("Getting Error", error);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -92,7 +117,7 @@ const UserDetailsForm = () => {
         <form
           noValidate
           onSubmit={handleSubmit(onSubmit, onError)}
-          className="space-y-1 text-black bg-gray-400"
+          className="space-y-1 w-[100%] text-black"
         >
           {/* Full Name */}
           <FormField
@@ -102,147 +127,242 @@ const UserDetailsForm = () => {
               <FormItem>
                 <FormLabel className="text-[#ABB8C4]">Full Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ali Asghar" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Email Address */}
-          <FormField
-            control={form.control}
-            name="email_address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Email</FormLabel>
-                <FormControl>
                   <Input
-                    placeholder="example@example.com"
+                    placeholder="Ali Asghar"
                     {...field}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            {/* Email Address */}
+            <FormField
+              control={form.control}
+              name="email_address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="example@example.com"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Phone Number */}
-          <FormField
-            control={form.control}
-            name="phone_number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Phone Number</FormLabel>
-                <FormControl>
-                  <Input placeholder="123-456-7890" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Phone Number */}
+            <FormField
+              control={form.control}
+              name="phone_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">Phone Number</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="123-456-7890"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          {/* Date of Birth */}
-          <FormField
-            control={form.control}
-            name="date_of_birth"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Date of Birth</FormLabel>
-                <FormControl>
-                  <Input placeholder="YYYY-MM-DD" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            {/* Date of Birth */}
+            <FormField
+              control={form.control}
+              name="date_of_birth"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Date of Birth
+                  </FormLabel>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white w-[280px] justify-start text-left font-normal",
+                            !date && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {date ? (
+                            format(date, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="flex w-auto flex-col bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white space-y-2 p-2">
+                        <Select
+                          onValueChange={(value) =>
+                            setDate(addDays(new Date(), parseInt(value)))
+                          }
+                        >
+                          <SelectTrigger className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white ">
+                            <SelectValue
+                              placeholder="Select"
+                              className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white "
+                            />
+                          </SelectTrigger>
+                          <SelectContent
+                            position="popper"
+                            className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white "
+                          >
+                            <SelectItem value="0">Today</SelectItem>
+                            <SelectItem value="1">Tomorrow</SelectItem>
+                            <SelectItem value="3">In 3 days</SelectItem>
+                            <SelectItem value="7">In a week</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <div className="rounded-md border bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white ">
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={setDate}
+                          />
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Gender */}
-          <FormField
-            control={form.control}
-            name="gender"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Gender</FormLabel>
-                <FormControl>
-                  <RadioGroup {...field} className="flex items-center space-x-4">
-                    <RadioGroupItem value="male" id="male" />
-                    <Label htmlFor="male">Male</Label>
-                    <RadioGroupItem value="female" id="female" />
-                    <Label htmlFor="female">Female</Label>
-                    <RadioGroupItem value="other" id="other" />
-                    <Label htmlFor="other">Other</Label>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Gender */}
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">Gender</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      {...field}
+                      // className="flex items-center space-x-4"
+                      className=" flex space-x-2  border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    >
+                      <div className="flex justify-around items-center border-[#363A3D] placeholder:text-[#76828D] text-white border-dashed border-2 p-2 px-4 rounded">
+                        <RadioGroupItem value="male" id="male" />
+                        <Label htmlFor="male">Male</Label>
+                      </div>
+                      <div className="flex justify-around items-center border-[#363A3D] placeholder:text-[#76828D] text-white border-dashed border-2 p-2 px-4 rounded">
+                        <RadioGroupItem value="female" id="female" />
+                        <Label htmlFor="female">Female</Label>
+                      </div>
+                      <div className="flex justify-around items-center border-[#363A3D] placeholder:text-[#76828D] text-white border-dashed border-2 p-2 px-4 rounded">
+                        <RadioGroupItem value="other" id="other" />
+                        <Label htmlFor="other">Other</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          {/* Address */}
-          <FormField
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Address</FormLabel>
-                <FormControl>
-                  <Input placeholder="123 Main St" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            {/* Address */}
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="123 Main St"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Occupation */}
-          <FormField
-            control={form.control}
-            name="occupation"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Occupation</FormLabel>
-                <FormControl>
-                  <Input placeholder="Software Engineer" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Occupation */}
+            <FormField
+              control={form.control}
+              name="occupation"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">Occupation</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Software Engineer"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          {/* Emergency Contact Name */}
-          <FormField
-            control={form.control}
-            name="emergency_contact_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Emergency Contact Name
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="John Doe" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            {/* Emergency Contact Name */}
+            <FormField
+              control={form.control}
+              name="emergency_contact_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Emergency Contact Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="John Doe"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Emergency Contact Number */}
-          <FormField
-            control={form.control}
-            name="emergency_contact_number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Emergency Contact Number
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="123-456-7890" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+            {/* Emergency Contact Number */}
+            <FormField
+              control={form.control}
+              name="emergency_contact_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Emergency Contact Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="123-456-7890"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            <h1 className="text-3xl text-white mt-20 mb-5 font-bold">
+              Medical Information{" "}
+            </h1>
+          </div>
           {/* Primary Care Physician */}
           <FormField
             control={form.control}
@@ -253,113 +373,149 @@ const UserDetailsForm = () => {
                   Primary Care Physician
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Dr. Smith" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Insurance Provider */}
-          <FormField
-            control={form.control}
-            name="insurance_provider"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Insurance Provider
-                </FormLabel>
-                <FormControl>
                   <Input
-                    placeholder="Blue Cross Blue Shield"
+                    placeholder="Dr. Smith"
                     {...field}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            {/* Insurance Provider */}
+            <FormField
+              control={form.control}
+              name="insurance_provider"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Insurance Provider
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Blue Cross Blue Shield"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Insurance Policy Number */}
-          <FormField
-            control={form.control}
-            name="insurance_policy_number"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Insurance Policy Number
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="1234567890" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Insurance Policy Number */}
+            <FormField
+              control={form.control}
+              name="insurance_policy_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Insurance Policy Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="1234567890"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            {/* Allergies */}
+            <FormField
+              control={form.control}
+              name="allergies"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">Allergies</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Peanuts"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Current Medications */}
+            <FormField
+              control={form.control}
+              name="current_medications"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Current Medications
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Aspirin"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          {/* Allergies */}
-          <FormField
-            control={form.control}
-            name="allergies"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Allergies</FormLabel>
-                <FormControl>
-                  <Input placeholder="Peanuts" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            {/* Family Medical History */}
+            <FormField
+              control={form.control}
+              name="family_medical_history"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Family Medical History
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Diabetes"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Family Medical History */}
-          <FormField
-            control={form.control}
-            name="family_medical_history"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Family Medical History
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="Diabetes" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Past Diagnosis */}
+            <FormField
+              control={form.control}
+              name="past_diagnosis"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Past Diagnosis
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Hypertension"
+                      {...field}
+                      className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
-          {/* Current Medications */}
-          <FormField
-            control={form.control}
-            name="current_medications"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Current Medications
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="Aspirin" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Past Diagnosis */}
-          <FormField
-            control={form.control}
-            name="past_diagnosis"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">Past Diagnosis</FormLabel>
-                <FormControl>
-                  <Input placeholder="Hypertension" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-1 gap-4 mt-3 ">
+            <h1 className="text-3xl  text-white mt-20 mb-5 font-bold">
+              Identification and Verification{" "}
+            </h1>
+          </div>
 
           {/* Identification Type */}
           <FormField
@@ -371,7 +527,11 @@ const UserDetailsForm = () => {
                   Identification Type
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Driver's License" {...field} />
+                  <Input
+                    placeholder="Driver's License"
+                    {...field}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -388,7 +548,11 @@ const UserDetailsForm = () => {
                   Identification Number
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="D1234567" {...field} />
+                  <Input
+                    placeholder="D1234567"
+                    {...field}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -406,14 +570,22 @@ const UserDetailsForm = () => {
                 </FormLabel>
                 <FormControl>
                   <Input
+                    type="file"
                     placeholder="http://example.com/scan.jpg"
                     {...field}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          <div className="grid grid-cols-1 gap-4 mt-3 ">
+            <h1 className="text-3xl  text-white mt-20 mb-5 font-bold">
+              Consent and Privacy{" "}
+            </h1>
+          </div>
 
           {/* Consent to Receive Treatment */}
           <FormField
@@ -425,6 +597,7 @@ const UserDetailsForm = () => {
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
                 <FormLabel className="text-[#ABB8C4]">
@@ -444,6 +617,7 @@ const UserDetailsForm = () => {
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
                 <FormLabel className="text-[#ABB8C4]">
@@ -464,6 +638,7 @@ const UserDetailsForm = () => {
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
                 <FormLabel className="text-[#ABB8C4]">
@@ -473,10 +648,26 @@ const UserDetailsForm = () => {
             )}
           />
 
-          {/* Submit Button */}
-          <Button type="submit" disabled={!isDirty || !isValid}>
-            Submit
-          </Button>
+          <div>
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              disabled={!isDirty || !isValid}
+              className={`${
+                isValid ? "bg-[#24AE7C]" : "bg-gray-300"
+              } w-full mt-4 text-white font-semibold hover:bg-[#24AE7C] my-10 `}
+            >
+              {!isValid ? (
+                "Please fill form"
+              ) : isSubmitting ? (
+                <div className="flex items-center justify-center font-bold">
+                  <Loader className="mr-2 h-4 w-4 animate-spin" /> Registering
+                </div>
+              ) : (
+                "Get Started"
+              )}
+            </Button>
+          </div>
         </form>
       </Form>
     </>
