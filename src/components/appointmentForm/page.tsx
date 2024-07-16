@@ -19,6 +19,8 @@ import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+
 import {
   Select as UISelect,
   SelectTrigger,
@@ -29,30 +31,13 @@ import {
 import { cn } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Loader } from "lucide-react";
+import { physicianOptions } from "../../../public/assets/images/data/userFormData";
 
 type PhysicianOption = {
   value: string;
   label: string;
   image: string;
 };
-
-export const physicianOptions: PhysicianOption[] = [
-  {
-    value: "dr_ali",
-    label: "Dr. Ali",
-    image: "/assets/images/drAdam.png",
-  },
-  {
-    value: "dr_ava",
-    label: "Dr. Ava",
-    image: "/assets/images/drAva.png",
-  },
-  {
-    value: "dr_sarah",
-    label: "Dr. Sarah",
-    image: "/assets/images/drSarah.png",
-  },
-];
 
 const AppointmentForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -86,16 +71,16 @@ const AppointmentForm: React.FC = () => {
         data
       );
       toast({
-        description: "Form submitted successfully!",
+        description: "Appointment booked successfully!",
         title: "Success",
         variant: "default",
       });
       reset();
     } catch (error) {
-      console.log("Error Registering User:", error);
+      console.log("Error booking appointment:", error);
       toast({
         title: "Error",
-        description: "Error Registering User",
+        description: "Error booking appointment. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -118,7 +103,7 @@ const AppointmentForm: React.FC = () => {
             rules={{ required: "Please select a physician" }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Select Physician</FormLabel>
+                <FormLabel className="text-[#ABB8C4]">Doctor</FormLabel>
                 <FormControl>
                   <Controller
                     control={control}
@@ -152,50 +137,51 @@ const AppointmentForm: React.FC = () => {
             )}
           />
 
-          <FormField
-            control={control}
-            name="reason"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Reason</FormLabel>
-                <FormControl>
-                  <Input
-                    className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white"
-                    type="text"
-                    placeholder="Reason for visit"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  What is the reason for your visit?
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-2 gap-4 mt-3 ">
+            <FormField
+              control={control}
+              name="reason"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Reason</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white placeholder:text-[#76828D]"
+                      type="text"
+                      placeholder="ex: Annual montly check-up"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    What is the reason for your visit?
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={control}
-            name="additionalComments"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Additional Comments</FormLabel>
-                <FormControl>
-                  <Input
-                    className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white"
-                    type="text"
-                    placeholder="Additional comments"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Add any additional comments here.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+            <FormField
+              control={control}
+              name="additionalComments"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Additional Comments</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white placeholder:text-[#76828D]"
+                      type="text"
+                      placeholder="ex: Prefer afternoon appointments, if possible"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Add any additional comments here.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={control}
             name="expectedDate"
@@ -208,7 +194,7 @@ const AppointmentForm: React.FC = () => {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white w-[280px] justify-start text-left font-normal",
+                          " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-whit w-[280px] justify-start text-left font-normal w-full",
                           !date && "text-muted-foreground"
                         )}
                       >
@@ -255,14 +241,14 @@ const AppointmentForm: React.FC = () => {
 
           <Button
             type="submit"
-            disabled={!isDirty || !isValid}
+            disabled={!isDirty}
             className={`${
               isValid ? "bg-[#24AE7C]" : "bg-gray-300"
             } w-full mt-4 text-white font-semibold hover:bg-[#24AE7C] my-10 `}
           >
             {isSubmitting ? (
               <div className="flex items-center justify-center font-bold">
-                <Loader className="mr-2 h-4 w-4 animate-spin" /> Finding...
+                <Loader className="mr-2 h-4 w-4 animate-spin" /> Booking...
               </div>
             ) : (
               "Submit"

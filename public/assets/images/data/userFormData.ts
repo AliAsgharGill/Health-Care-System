@@ -17,19 +17,17 @@ export const physicianOptions: PhysicianOption[] = [
     image: "/assets/images/drSarah.png",
   },
 ];
-
-  export const IdentificationType = [
-    {
-      value: "cnic_card",
-      label: "CNIC Card",
-    },
-    {
-      value: "birth_certificate",
-      label: "Birth Certificate",
-    },
-    {
-      value: "license",
-      label: "license",
-    },
-  ];
-  
+export const IdentificationType = [
+  {
+    value: "cnic_card",
+    label: "CNIC Card",
+  },
+  {
+    value: "birth_certificate",
+    label: "Birth Certificate",
+  },
+  {
+    value: "license",
+    label: "license",
+  },
+];
