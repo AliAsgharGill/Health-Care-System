@@ -28,7 +28,7 @@ import {
 } from "../ui/select";
 import { cn } from "@/lib/utils";
 import { format, addDays } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Loader } from "lucide-react";
 
 type PhysicianOption = {
   value: string;
@@ -202,7 +202,6 @@ const AppointmentForm: React.FC = () => {
             rules={{ required: "Please select an expected date" }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Expected Date</FormLabel>
                 <FormControl>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -256,11 +255,18 @@ const AppointmentForm: React.FC = () => {
 
           <Button
             type="submit"
-            disabled={
-              !isDirty || !isValid || isSubmitSuccessful || isSubmitting
-            }
+            disabled={!isDirty || !isValid}
+            className={`${
+              isValid ? "bg-[#24AE7C]" : "bg-gray-300"
+            } w-full mt-4 text-white font-semibold hover:bg-[#24AE7C] my-10 `}
           >
-            Submit
+            {isSubmitting ? (
+              <div className="flex items-center justify-center font-bold">
+                <Loader className="mr-2 h-4 w-4 animate-spin" /> Finding...
+              </div>
+            ) : (
+              "Submit"
+            )}
           </Button>
         </form>
       </Form>

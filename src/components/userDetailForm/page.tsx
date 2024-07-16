@@ -639,7 +639,7 @@ const UserDetailsForm = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={!isDirty}
+              disabled={!isDirty || !isValid }
               className={`${
                 isValid ? "bg-[#24AE7C]" : "bg-gray-300"
               } w-full mt-4 text-white font-semibold hover:bg-[#24AE7C] my-10 `}
