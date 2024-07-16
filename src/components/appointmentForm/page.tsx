@@ -18,6 +18,17 @@ import { toast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
+import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import {
+  Select as UISelect,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../ui/select";
+import { cn } from "@/lib/utils";
+import { format, addDays } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 
 type PhysicianOption = {
   value: string;
@@ -45,6 +56,8 @@ export const physicianOptions: PhysicianOption[] = [
 
 const AppointmentForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
   const form = useForm<AppointmentFormValues>({
     defaultValues: {
       drName: null,
@@ -88,6 +101,11 @@ const AppointmentForm: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleDateChange = (selectedDate: Date) => {
+    setDate(selectedDate);
+    form.setValue("expectedDate", selectedDate.toISOString());
   };
 
   return (
@@ -186,19 +204,50 @@ const AppointmentForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Expected Date</FormLabel>
                 <FormControl>
-                  <Controller
-                    control={control}
-                    name="expectedDate"
-                    render={({ field }) => (
-                      <Calendar
-                        className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white"
-                        {...field}
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                      />
-                    )}
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white w-[280px] justify-start text-left font-normal",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="flex w-auto flex-col bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] rounded-lg text-white space-y-2 p-2">
+                      <UISelect
+                        onValueChange={(value) =>
+                          handleDateChange(addDays(new Date(), parseInt(value)))
+                        }
+                      >
+                        <SelectTrigger className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white ">
+                          <SelectValue
+                            placeholder="Select"
+                            className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white "
+                          />
+                        </SelectTrigger>
+                        <SelectContent
+                          position="popper"
+                          className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white "
+                        >
+                          <SelectItem value="0">Today</SelectItem>
+                          <SelectItem value="1">Tomorrow</SelectItem>
+                          <SelectItem value="3">In 3 days</SelectItem>
+                          <SelectItem value="7">In a week</SelectItem>
+                        </SelectContent>
+                      </UISelect>
+                      <div className="rounded-md border bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white ">
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={handleDateChange}
+                        />
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </FormControl>
                 <FormMessage>{errors.expectedDate?.message}</FormMessage>
               </FormItem>
