@@ -1,7 +1,7 @@
 "use client";
 import { UserDetailsTypes } from "@/types/userDetailTypes";
 import React, { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { UserDetailsSchema } from "@/schemas/userDetailsSchema";
 import { z } from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -40,39 +40,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import {
+  IdentificationType,
+  physicianOptions,
+} from "../../../public/assets/images/data/userFormData";
+import { defaultValues } from "./defaultValues";
 
 const UserDetailsForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = React.useState<Date>();
-
+  const route = useRouter();
   const form = useForm<z.infer<typeof UserDetailsSchema>>({
-    defaultValues: {
-      full_name: "",
-      email_address: "",
-      phone_number: "",
-      date_of_birth: "",
-      gender: "male",
-      address: "",
-      occupation: "",
-      emergency_contact_name: "",
-      emergency_contact_number: "",
-
-      primary_care_physician: "",
-      insurance_provider: "",
-      insurance_policy_number: "",
-      allergies: "",
-      current_medications: "",
-      family_medical_history: "",
-      past_diagnosis: "",
-
-      identification_type: "",
-      identification_number: "",
-      scanned_copy_of_identification_document: "",
-
-      receive_treatment: false,
-      share_medical_info: false,
-      privacy_policy: false,
-    },
+    defaultValues,
     mode: "onChange",
     resolver: zodResolver(UserDetailsSchema),
   });
@@ -96,6 +77,7 @@ const UserDetailsForm = () => {
           </pre>
         ),
       });
+      route.push("/dashboard");
       reset();
     } catch (error) {
       console.log("Getting Error", error);
@@ -339,25 +321,44 @@ const UserDetailsForm = () => {
             </h1>
           </div>
           {/* Primary Care Physician */}
-          <FormField
-            control={form.control}
-            name="primary_care_physician"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Primary Care Physician
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Dr. Smith"
-                    {...field}
-                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="form-field">
+            <label className="text-[#ABB8C4]">Primary Care Physician</label>
+            <Controller
+              name="primary_care_physician"
+              control={form.control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                >
+                  <SelectTrigger>
+                    <SelectValue>
+                      {physicianOptions.find(
+                        (option) => option.value === field.value
+                      )?.label || "Select a physician"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {physicianOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        <Image
+                          src={option.image}
+                          alt={option.label}
+                          height={24}
+                          width={24}
+                          className="inline-block mr-2"
+                        />
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4 mt-3 ">
             {/* Insurance Provider */}
             <FormField
@@ -493,25 +494,36 @@ const UserDetailsForm = () => {
           </div>
 
           {/* Identification Type */}
-          <FormField
-            control={form.control}
-            name="identification_type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[#ABB8C4]">
-                  Identification Type
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Driver's License"
-                    {...field}
-                    className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="form-field">
+            <label className="text-[#ABB8C4]">Identification Type</label>
+            <Controller
+              name="identification_type"
+              control={form.control}
+              render={({ field }) => (
+                <Select
+                  value={field.value}
+                  onChange={field.onChange}
+                  onBlur={field.onBlur}
+                  className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
+                >
+                  <SelectTrigger>
+                    <SelectValue>
+                      {IdentificationType.find(
+                        (option) => option.value === field.value
+                      )?.label || "Select an identification type"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {IdentificationType.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
 
           {/* Identification Number */}
           <FormField
@@ -575,7 +587,7 @@ const UserDetailsForm = () => {
                     className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
-                <FormLabel className="text-[#ABB8C4]">
+                <FormLabel className="text-[#ABB8C4] pl-2 ">
                   I consent to receive treatment
                 </FormLabel>
               </FormItem>
@@ -595,7 +607,7 @@ const UserDetailsForm = () => {
                     className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
-                <FormLabel className="text-[#ABB8C4]">
+                <FormLabel className="text-[#ABB8C4] pl-2 ">
                   I consent to share my medical information with relevant
                   parties
                 </FormLabel>
@@ -616,7 +628,7 @@ const UserDetailsForm = () => {
                     className="bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white"
                   />
                 </FormControl>
-                <FormLabel className="text-[#ABB8C4]">
+                <FormLabel className="text-[#ABB8C4] pl-2 ">
                   I agree to the privacy policy
                 </FormLabel>
               </FormItem>
@@ -627,19 +639,17 @@ const UserDetailsForm = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={!isDirty || !isValid}
+              disabled={!isDirty}
               className={`${
                 isValid ? "bg-[#24AE7C]" : "bg-gray-300"
               } w-full mt-4 text-white font-semibold hover:bg-[#24AE7C] my-10 `}
             >
-              {!isValid ? (
-                "Please fill form"
-              ) : isSubmitting ? (
+              {isSubmitting ? (
                 <div className="flex items-center justify-center font-bold">
                   <Loader className="mr-2 h-4 w-4 animate-spin" /> Registering
                 </div>
               ) : (
-                "Get Started"
+                "Submit and continue"
               )}
             </Button>
           </div>
