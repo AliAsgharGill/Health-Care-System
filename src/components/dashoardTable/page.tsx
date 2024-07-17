@@ -27,6 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { appointments } from "../../../public/assets/data/appointments";
+import ScheduleForm from "../scheduleForm/page";
 
 const rowsPerPage = 4;
 
@@ -130,12 +131,28 @@ export function DashboardTable() {
                     </Button>
                   </DialogTrigger>
                   {currentScheduleId === appointment.id && (
-                    <DialogContent onClose={closeDialog}>
+                    <DialogContent
+                      onClose={closeDialog}
+                      className="bg-[#1A1D21]"
+                    >
                       <DialogHeader>
-                        <DialogTitle>Schedule Appointment</DialogTitle>
+                        <DialogTitle className="text-2xl text-white">
+                          Schedule Appointment
+                        </DialogTitle>
                         <DialogDescription>
-                          Schedule appointment for {appointment.name} with{" "}
-                          {appointment.doctor.name}.
+                          Schedule appointment for{" "}
+                          <span className="text-[#24AE7C] font-semibold">
+                            {appointment.date}
+                          </span>{" "}
+                          with{" "}
+                          <span className="text-[#24AE7C] font-semibold">
+                            {appointment.doctor.name}.
+                          </span>
+                          {/* Schedule Form */}
+                          <ScheduleForm />
+                        </DialogDescription>
+                        <DialogDescription>
+                          Please fill in the following details to schedule
                         </DialogDescription>
                       </DialogHeader>
                     </DialogContent>
