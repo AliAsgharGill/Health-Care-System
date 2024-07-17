@@ -5,7 +5,7 @@ import React from "react";
 const Nav = () => {
   return (
     <>
-      <div className="flex justify-between items-center m-5">
+      <div className="flex justify-between items-center mt-14 mx-14">
         <Link href="/">
           <Image
             src="/assets/images/logo.png"
