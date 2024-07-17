@@ -140,7 +140,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
                   "Please fill form"
                 ) : isSubmitting ? (
                   <div className="flex items-center justify-center font-bold">
-                    <Loader className="mr-2 h-4 w-4 animate-spin" /> Registering
+                    <Loader className="mr-2 h-4 w-4 animate-spin" /> Registering...
                   </div>
                 ) : (
                   "Get Started"

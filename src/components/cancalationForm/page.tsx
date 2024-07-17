@@ -33,7 +33,7 @@ import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Loader } from "lucide-react";
 import { physicianOptions } from "../../../public/assets/data/userFormData";
 
-const CancelationForm: React.FC = () => {
+const CancellationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<AppointmentFormValues>({
@@ -130,4 +130,4 @@ const CancelationForm: React.FC = () => {
   );
 };
 
-export default CancelationForm;
+export default CancellationForm;

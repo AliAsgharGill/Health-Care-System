@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { appointments } from "../../../public/assets/data/appointments";
 import ScheduleForm from "../scheduleForm/page";
-import CancelationForm from "../cancalationForm/page";
+import CancellationForm from "../cancalationForm/page";
 
 const rowsPerPage = 4;
 
@@ -181,7 +181,7 @@ export function DashboardTable() {
                         <DialogDescription className="text-[#ABB8C4]">
                           Are you sure you want to cancel your appointment
                           {/* Cancel Form */}
-                          <CancelationForm />
+                          <CancellationForm />
                         </DialogDescription>
                       </DialogHeader>
                     </DialogContent>
