@@ -2,6 +2,15 @@
   @tailwind components;
   @tailwind utilities;
 
+  /* Add this to your main CSS file */
+@layer utilities {
+  .focus\:border-gradient-to-r:focus {
+    border-image-slice: 1;
+    border-width: 2px; /* Adjust the border width as needed */
+    border-image-source: linear-gradient(to right, #82DBF7, #84DCF5, #B6F09C);
+  }
+}
+
   @layer base {
     :root {
       --background: 0 0% 100%;

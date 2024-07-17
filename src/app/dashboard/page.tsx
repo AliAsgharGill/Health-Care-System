@@ -1,4 +1,5 @@
 import AppointmentInfo from "@/components/appointmentInfo/page";
+import { DashboardTable } from "@/components/dashoardTable/page";
 import Nav from "@/components/nav/page";
 import React from "react";
 
@@ -17,6 +18,9 @@ const Dashboard = () => {
         </div>
       </div>
       <AppointmentInfo />
+      <div className="flex justify-evenly items-center  m-20">
+        <DashboardTable />
+      </div>
     </>
   );
 };

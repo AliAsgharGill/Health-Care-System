@@ -19,6 +19,12 @@ const config = {
       },
     },
     extend: {
+      variants: {
+        extend: {
+          // Add the focus variant for the custom gradient border
+          borderColor: ["focus"],
+        },
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

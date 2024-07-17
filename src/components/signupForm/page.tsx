@@ -76,7 +76,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
                 <Input
                   id="fullName"
                   {...register("full_name", { required: true })}
-                  className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white "
+                  className="mt-1 border-2 pl-10  active:border-gradient bg-[#363A3D] text-white  focus:border-gradient-to-r from-[#82DBF7] via-[#84DCF5] to-[#B6F09C]   "
                   type="text"
                   placeholder="Ali Asghar"
                 />
