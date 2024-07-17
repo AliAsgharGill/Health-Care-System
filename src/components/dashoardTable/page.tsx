@@ -86,7 +86,7 @@ export function DashboardTable() {
       <TableCaption>A list of your recent appointments.</TableCaption>
       <TableHeader>
         <TableRow className="flex items-center justify-between pt-4 w-full bg-[#1A1D21] text-[#CDCECF] hover:bg-black">
-          <TableHead className="flex-1" >Patient</TableHead>
+          <TableHead className="flex-1">Patient</TableHead>
           <TableHead className="flex-1">Date</TableHead>
           <TableHead className="flex-1">Status</TableHead>
           <TableHead className="flex-1">Doctor</TableHead>
@@ -114,8 +114,13 @@ export function DashboardTable() {
               <span className="ml-2">{appointment.doctor.name}</span>
             </TableCell>
             <TableCell className="flex-1">
-              <Button className="mr-2">{appointment.actions.schedule}</Button>
-              <Button>{appointment.actions.cancel}</Button>
+              <Button
+                variant="ghost"
+                className=" font-semibold mr-2 text-[#24AE7C]"
+              >
+                {appointment.actions.schedule}
+              </Button>
+              <Button variant="ghost">{appointment.actions.cancel}</Button>
             </TableCell>
           </TableRow>
         ))}
