@@ -18,78 +18,22 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import { Button } from "../ui/button";
-
-const appointments = [
-  {
-    name: "Phoenix Baker",
-    date: "Jan 4, 2022",
-    status: "Scheduled",
-    doctor: {
-      name: "Dr. John Doe",
-      image: "/assets/images/drAlex.png",
-    },
-    actions: {
-      schedule: "Schedule",
-      cancel: "Cancel",
-    },
-  },
-  {
-    name: "Candice Wu",
-    date: "Jan 2, 2022",
-    status: "Pending",
-    doctor: {
-      name: "Dr. Michael May",
-      image: "/assets/images/drMichael.png",
-    },
-    actions: {
-      schedule: "Schedule",
-      cancel: "Cancel",
-    },
-  },
-  {
-    name: "Lana Steiner",
-    date: "Jan 4, 2022",
-    status: "Cancelled",
-    doctor: {
-      name: "Dr. Jasmine Lee",
-      image: "/assets/images/drJasmine.png",
-    },
-    actions: {
-      schedule: "Schedule",
-      cancel: "Cancel",
-    },
-  },
-  {
-    name: "Drew Cano",
-    date: "Jan 8, 2022",
-    status: "Scheduled",
-    doctor: {
-      name: "Dr. Hardik Sharma",
-      image: "/assets/images/drHardik.png",
-    },
-    actions: {
-      schedule: "Schedule",
-      cancel: "Cancel",
-    },
-  },
-  {
-    name: "Natali Craig",
-    date: "Jan 6, 2022",
-    status: "Pending",
-    doctor: {
-      name: "Dr. Alyana Cruz",
-      image: "/assets/images/drAlyana.png",
-    },
-    actions: {
-      schedule: "Schedule",
-      cancel: "Cancel",
-    },
-  },
-];
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { appointments } from "../../../public/assets/data/appointments";
 
 const rowsPerPage = 4;
 
 export function DashboardTable() {
+  const [currentScheduleId, setCurrentScheduleId] = useState<number | null>(
+    null
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(appointments.length / rowsPerPage);
@@ -111,70 +55,119 @@ export function DashboardTable() {
     currentPage * rowsPerPage
   );
 
-  return (
-    <Table className="text-white w-full">
-      <TableCaption className="w-full">
-        <Pagination>
-          <PaginationContent className="w-full flex justify-between items-center">
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={handlePreviousPage}
-                href="#"
-                disabled={currentPage === 1}
-              />
-            </PaginationItem>
+  const handleSchedule = (id: number) => {
+    setCurrentScheduleId(id);
+  };
 
-            <PaginationItem>
-              <PaginationNext
-                onClick={handleNextPage}
-                href="#"
-                disabled={currentPage === totalPages}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </TableCaption>
-      <TableHeader>
-        <TableRow className="flex items-center justify-between pt-4 w-full bg-[#1A1D21] text-[#CDCECF] hover:bg-black">
-          <TableHead className="flex-1">Patient</TableHead>
-          <TableHead className="flex-1">Date</TableHead>
-          <TableHead className="flex-1">Status</TableHead>
-          <TableHead className="flex-1">Doctor</TableHead>
-          <TableHead className="flex-1">Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {currentData.map((appointment, index) => (
-          <TableRow
-            key={index}
-            className="even:bg-[#1C2023] flex items-center justify-between w-full"
-          >
-            <TableCell className="font-medium flex-1">
-              {appointment.name}
-            </TableCell>
-            <TableCell className="flex-1">{appointment.date}</TableCell>
-            <TableCell className="flex-1">{appointment.status}</TableCell>
-            <TableCell className="flex items-center flex-1">
-              <Image
-                src={appointment.doctor.image}
-                alt="doctor"
-                width={50}
-                height={50}
-              />
-              <span className="ml-2">{appointment.doctor.name}</span>
-            </TableCell>
-            <TableCell className="flex-1">
-              <Button
-                variant="ghost"
-                className="font-semibold mr-2 text-[#24AE7C]"
-              >
-                {appointment.actions.schedule}
-              </Button>
-              <Button variant="ghost">{appointment.actions.cancel}</Button>
-            </TableCell>
+  const closeDialog = () => {
+    setCurrentScheduleId(null);
+  };
+
+  return (
+    <>
+      <Table className="text-white w-full">
+        <TableCaption className="w-full">
+          <Pagination>
+            <PaginationContent className="w-full flex justify-between items-center">
+              <PaginationItem>
+                <PaginationPrevious
+                  className="text-[#24AE7C]"
+                  onClick={handlePreviousPage}
+                  href="#"
+                  disabled={currentPage === 1}
+                />
+              </PaginationItem>
+
+              <PaginationItem>
+                <PaginationNext
+                  className="text-[#24AE7C]"
+                  onClick={handleNextPage}
+                  href="#"
+                  disabled={currentPage === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </TableCaption>
+        <TableHeader>
+          <TableRow className="flex items-center justify-between pt-4 w-full bg-[#1A1D21] text-[#CDCECF] hover:bg-black">
+            <TableHead className="flex-1">Patient</TableHead>
+            <TableHead className="flex-1">Date</TableHead>
+            <TableHead className="flex-1">Status</TableHead>
+            <TableHead className="flex-1">Doctor</TableHead>
+            <TableHead className="flex-1">Actions</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {currentData.map((appointment) => (
+            <TableRow
+              key={appointment.id}
+              className="even:bg-[#1C2023] flex items-center justify-between w-full"
+            >
+              <TableCell className="font-medium flex-1">
+                {appointment.name}
+              </TableCell>
+              <TableCell className="flex-1">{appointment.date}</TableCell>
+              <TableCell className="flex-1">{appointment.status}</TableCell>
+              <TableCell className="flex items-center flex-1">
+                <Image
+                  src={appointment.doctor.image}
+                  alt="doctor"
+                  width={50}
+                  height={50}
+                />
+                <span className="ml-2">{appointment.doctor.name}</span>
+              </TableCell>
+              <TableCell className="flex-1">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="font-semibold mr-2 text-[#24AE7C]"
+                      onClick={() => handleSchedule(appointment.id)}
+                    >
+                      {appointment.actions.schedule}
+                    </Button>
+                  </DialogTrigger>
+                  {currentScheduleId === appointment.id && (
+                    <DialogContent onClose={closeDialog}>
+                      <DialogHeader>
+                        <DialogTitle>Schedule Appointment</DialogTitle>
+                        <DialogDescription>
+                          Schedule appointment for {appointment.name} with{" "}
+                          {appointment.doctor.name}.
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  )}
+                </Dialog>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="font-semibold"
+                      onClick={() => handleSchedule(appointment.id)}
+                    >
+                      {appointment.actions.cancel}
+                    </Button>
+                  </DialogTrigger>
+                  {currentScheduleId === appointment.id && (
+                    <DialogContent onClose={closeDialog}>
+                      <DialogHeader>
+                        <DialogTitle>Schedule Appointment</DialogTitle>
+                        <DialogDescription>
+                          Schedule appointment for {appointment.name} with{" "}
+                          {appointment.doctor.name}.
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  )}
+                </Dialog>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 }
