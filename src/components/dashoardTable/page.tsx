@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { appointments } from "../../../public/assets/data/appointments";
 import ScheduleForm from "../scheduleForm/page";
+import CancelationForm from "../cancalationForm/page";
 
 const rowsPerPage = 4;
 
@@ -152,7 +153,7 @@ export function DashboardTable() {
                           <ScheduleForm />
                         </DialogDescription>
                         <DialogDescription>
-                          Please fill in the following details to schedule
+                          Please fill the details to schedule
                         </DialogDescription>
                       </DialogHeader>
                     </DialogContent>
@@ -169,12 +170,18 @@ export function DashboardTable() {
                     </Button>
                   </DialogTrigger>
                   {currentScheduleId === appointment.id && (
-                    <DialogContent onClose={closeDialog}>
+                    <DialogContent
+                      onClose={closeDialog}
+                      className="bg-[#1A1D21]"
+                    >
                       <DialogHeader>
-                        <DialogTitle>Schedule Appointment</DialogTitle>
-                        <DialogDescription>
-                          Schedule appointment for {appointment.name} with{" "}
-                          {appointment.doctor.name}.
+                        <DialogTitle className="text-2xl text-white">
+                          Cancel Appointment{" "}
+                        </DialogTitle>
+                        <DialogDescription className="text-[#ABB8C4]">
+                          Are you sure you want to cancel your appointment
+                          {/* Cancel Form */}
+                          <CancelationForm />
                         </DialogDescription>
                       </DialogHeader>
                     </DialogContent>

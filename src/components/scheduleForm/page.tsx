@@ -143,12 +143,12 @@ const ScheduleForm: React.FC = () => {
               name="reason"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reason</FormLabel>
+                  <FormLabel>Reason for appointment </FormLabel>
                   <FormControl>
                     <Textarea
                       className="mt-1 border-2 border-transparent active:border-gradient bg-[#363A3D] text-white placeholder:text-[#76828D]"
                       type="text"
-                      placeholder="ex: Annual montly check-up"
+                      placeholder="ex: Annual monthly check-up"
                       {...field}
                     />
                   </FormControl>
@@ -164,7 +164,7 @@ const ScheduleForm: React.FC = () => {
             rules={{ required: "Please select an expected date" }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mt-1 ">Date</FormLabel>
+                <FormLabel className="mt-1 ">Expected appointment date</FormLabel>
 
                 <FormControl>
                   <Popover>
