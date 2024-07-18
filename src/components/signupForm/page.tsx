@@ -32,12 +32,17 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
   const { errors, isDirty, isValid, isSubmitSuccessful } = formState;
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
+    // here we will remove 0 from start of phone number and add +92
+    data.phone_number = data.phone_number.replace(/^0+/, "");
+    data.phone_number = "+92" + data.phone_number;
+    console.log("Phone Number:", data.phone_number);
+    
     setIsSubmitting(true);
     console.log("Form Submitted:", data);
     try {
       const response = await axios.post<SignupFormValues>(
         // Todo: need to change url
-        "https://65784a9df08799dc8044d036.mockapi.io/CRUD",
+        "http://192.168.0.247:8000/v1/user/register",
         data
       );
       toast({
@@ -140,7 +145,8 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
                   "Please fill form"
                 ) : isSubmitting ? (
                   <div className="flex items-center justify-center font-bold">
-                    <Loader className="mr-2 h-4 w-4 animate-spin" /> Registering...
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />{" "}
+                    Registering...
                   </div>
                 ) : (
                   "Get Started"
