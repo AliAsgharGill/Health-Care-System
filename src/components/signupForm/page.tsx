@@ -42,7 +42,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
     try {
       const response = await axios.post<SignupFormValues>(
         // Todo: need to change url
-        "/api/products",
+        "/api/users",
         // "http://192.168.0.247:8000/v1/user/register",
         data
       );
