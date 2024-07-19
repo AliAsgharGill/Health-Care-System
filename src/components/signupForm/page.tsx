@@ -36,13 +36,14 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
     data.phone_number = data.phone_number.replace(/^0+/, "");
     data.phone_number = "+92" + data.phone_number;
     console.log("Phone Number:", data.phone_number);
-    
+
     setIsSubmitting(true);
     console.log("Form Submitted:", data);
     try {
       const response = await axios.post<SignupFormValues>(
         // Todo: need to change url
-        "http://192.168.0.247:8000/v1/user/register",
+        "/api/products",
+        // "http://192.168.0.247:8000/v1/user/register",
         data
       );
       toast({
