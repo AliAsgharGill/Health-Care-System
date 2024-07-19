@@ -2,7 +2,6 @@
   @tailwind components;
   @tailwind utilities;
 
-  /* Add this to your main CSS file */
 @layer utilities {
   .focus\:border-gradient-to-r:focus {
     border-image-slice: 1;

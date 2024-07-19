@@ -13,10 +13,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "Health Care System",
-    template: "%s | Health Care System",
+    default: "CarePlus",
+    template: "%s | CarePlus",
   },
-  description: "Health Care System Is Designed For Everyone",
+  description: "CarePlus Is Designed For Everyone",
 };
 
 export default function RootLayout({

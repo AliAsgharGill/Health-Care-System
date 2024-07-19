@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
@@ -18,18 +18,27 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isCheckingPhoneNumber, setIsCheckingPhoneNumber] = useState(false);
+  const []
   const form = useForm<SignupFormValues>({
     defaultValues: {
       full_name: "",
       email: "",
       phone_number: "",
+      isVerified: false,
     },
     mode: "onChange",
     resolver: zodResolver(SignupSchema),
   });
   const { register, handleSubmit, formState, reset } = form;
   const { errors, isDirty, isValid, isSubmitSuccessful } = formState;
+
+  useEffect(() => {
+    if (phoneNumber) {
+      setIsCheckingPhoneNumber(true);
+    }
+  }, [phoneNumber]);
 
   const onSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     // here we will remove 0 from start of phone number and add +92
@@ -126,7 +135,7 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
                   {...register("phone_number", { required: true })}
                   className="mt-1 w-full pl-10 outline-[#0a95ff] border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
                   type="tel"
-                  placeholder="+923123456789"
+                  placeholder="03123456789"
                 />
               </div>
               <p className=" text-sm text-red-500 my-1">

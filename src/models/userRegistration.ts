@@ -12,6 +12,11 @@ const userRegistrationSchema = new Schema({
   phone_number: {
     type: String,
     required: true,
+    unique: true,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
 });
 
