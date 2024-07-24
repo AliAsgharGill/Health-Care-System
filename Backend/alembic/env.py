@@ -2,8 +2,9 @@ import os
 import sys
 from logging.config import fileConfig
 
+from sqlalchemy import create_engine, pool
+
 from alembic import context
-from sqlalchemy import pool, create_engine
 
 parent_dir = os.path.abspath(os.path.join(os.getcwd(), ".."))
 sys.path.append(parent_dir)
@@ -19,6 +20,7 @@ from core.config import config as app_config
 
 target_metadata = Base.metadata
 
+
 def run_migrations_offline():
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
@@ -31,17 +33,20 @@ def run_migrations_offline():
     with context.begin_transaction():
         context.run_migrations()
 
+
 def do_run_migrations(connection):
     context.configure(connection=connection, target_metadata=target_metadata)
 
     with context.begin_transaction():
         context.run_migrations()
 
+
 def run_migrations_online():
     connectable = create_engine(app_config.SQLITE3)
 
     with connectable.connect() as connection:
         do_run_migrations(connection)
+
 
 if context.is_offline_mode():
     run_migrations_offline()

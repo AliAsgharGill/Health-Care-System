@@ -1,5 +1,4 @@
-from .session import get_db, Base
-
+from .session import Base, get_db
 
 __all__ = [
     "Base",

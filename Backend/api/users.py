@@ -1,9 +1,10 @@
-from fastapi import status, Depends, APIRouter
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
-from app.schemas.requests.register_user import RegisterUser
+
 from app.crud.users import create_user
-from core.database.session import get_db
+from app.schemas.requests.register_user import RegisterUser
 from app.schemas.responses.user import UserResponse
+from core.database.session import get_db
 
 user_router = APIRouter()
 
