@@ -1,15 +1,22 @@
-from sqlalchemy import Column, Date, Integer, String, Enum
+import enum
+
+from sqlalchemy import Column, Date, Enum, Integer, String
 
 from core.database.session import Base
 
 
-class appointments(Base):
-    __tablename__ = "appointments"
+class status(enum.Enum):
+    pending = "pending"
+    scheduled = "scheduled"
+    cancelled = "cancelled"
 
+
+class Appointments(Base):
+    __tablename__ = "appointments"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    dr_name = Column(String)
-    reason = Column(String)
-    additionalComments = Column(String)
-    expectedDate = Column(Date)
-    patient_name = Column(String)
-    status = Column(Enum("pending", "scheduled", "cancelled"))
+    dr_name = Column(String, nullable=True)
+    reason = Column(String, nullable=True)
+    additionalComments = Column(String, nullable=True)
+    expectedDate = Column(String, nullable=True)
+    patient_name = Column(String, nullable=True)
+    status = Column(Enum(status), nullable=True)

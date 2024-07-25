@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models.appointments import appointments
+from app.models.appointments import Appointments as appointments
 from app.schemas.requests.appointments import AppointmentsSchema
 
 

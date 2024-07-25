@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 
+from api.appointments import appointments_router
 from api.doctors import get_doctors
 from api.users import user_router
-from api.appointments import appointments_router
+
 app = FastAPI()
 
 app.include_router(user_router, prefix="/register", tags=["Auth"])
