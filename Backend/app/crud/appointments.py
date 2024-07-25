@@ -30,6 +30,7 @@ def update_appointment_by_id(
     db_appointment.reason = appointment.reason
     db_appointment.additionalComments = appointment.additionalComments
     db_appointment.expectedDate = appointment.expectedDate
+    db_appointment.status = appointment.status
     db.commit()
     db.refresh(db_appointment)
     return db_appointment

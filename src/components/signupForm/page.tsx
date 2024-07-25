@@ -20,7 +20,6 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isCheckingPhoneNumber, setIsCheckingPhoneNumber] = useState(false);
-  const []
   const form = useForm<SignupFormValues>({
     defaultValues: {
       full_name: "",
@@ -51,12 +50,11 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
     try {
       const response = await axios.post<SignupFormValues>(
         // Todo: need to change url
-        "/api/users",
-        // "http://192.168.0.247:8000/v1/user/register",
+        "http://127.0.0.1:8000/register/",
         data
       );
       toast({
-        description: "Form submitted successfully!",
+        description: `Form submitted successfully! ${response.data} `,
         title: "Success",
         variant: "default",
       });

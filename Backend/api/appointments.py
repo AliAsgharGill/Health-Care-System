@@ -68,7 +68,7 @@ def update_appointments_by_id_endpoint(
     return db_appointments
 
 
-@appointments_router.delete("/{appointment_id}", status_code=status.HTTP_204_NO_CONTENT)
+@appointments_router.delete("/{appointment_id}")
 def delete_appointments_by_id_endpoint(
     appointment_id: int, db: Session = Depends(get_db)
 ):
@@ -77,7 +77,7 @@ def delete_appointments_by_id_endpoint(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="appointment not found"
         )
-    return db_appointments
+    return {"message": "deleted successfully"}
 
 
 @appointments_router.get(
