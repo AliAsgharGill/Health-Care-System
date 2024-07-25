@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, Integer, String
+from sqlalchemy import Column, Integer, String
 
 from core.database.session import Base
 
@@ -9,7 +9,7 @@ class User(Base):
     full_name = Column(String)
     email_address = Column(String, unique=True)
     phone_number = Column(String)
-    date_of_birth = Column(Date)
+    date_of_birth = Column(String)
     gender = Column(String)
     address = Column(String)
     occupation = Column(String)

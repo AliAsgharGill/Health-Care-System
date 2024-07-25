@@ -66,7 +66,7 @@ const UserDetailsForm = () => {
     console.log("Form Submitted", data);
     try {
       const response = await axios.post<UserDetailsTypes>(
-        "https://65784a9df08799dc8044d036.mockapi.io/CRUD",
+        "http://127.0.0.1:8000/register/details",
         data
       );
       toast({
@@ -639,7 +639,7 @@ const UserDetailsForm = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={!isDirty || !isValid }
+              disabled={!isDirty || !isValid}
               className={`${
                 isValid ? "bg-[#24AE7C]" : "bg-gray-300"
               } w-full mt-4 text-white font-semibold hover:bg-[#24AE7C] my-10 `}

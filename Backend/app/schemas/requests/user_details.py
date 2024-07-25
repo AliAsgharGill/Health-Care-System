@@ -1,4 +1,3 @@
-from datetime import date
 
 from pydantic import BaseModel, EmailStr, constr
 
@@ -6,13 +5,13 @@ from pydantic import BaseModel, EmailStr, constr
 class UserDetailSchema(BaseModel):
     full_name: str
     email_address: EmailStr
-    phone_number: constr(min_length=10, max_length=15)
-    date_of_birth: date
+    phone_number: str
+    date_of_birth: str
     gender: str
     address: str
     occupation: str | None = None
     emergency_contact_name: str
-    emergency_contact_number: constr(min_length=10, max_length=15)
+    emergency_contact_number: str
     primary_care_physician: str | None = None
     insurance_provider: str | None = None
     insurance_policy_number: str | None = None
