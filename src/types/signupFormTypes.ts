@@ -1,7 +1,6 @@
 export type SignupFormValues = {
     full_name: string;
-    email: string;
+    email_address: string;
     phone_number: string;
-    isVerified: boolean;
   };
   

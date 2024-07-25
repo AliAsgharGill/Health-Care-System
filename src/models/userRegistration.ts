@@ -5,7 +5,7 @@ const userRegistrationSchema = new Schema({
     type: String,
     required: true,
   },
-  email: {
+  email_address: {
     type: String,
     required: true,
   },
@@ -13,11 +13,7 @@ const userRegistrationSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
+  }
 });
 
 // here we can specify collection name like here we defined User and in MongoDB it will be automatically users

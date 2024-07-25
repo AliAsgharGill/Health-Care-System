@@ -23,9 +23,8 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
   const form = useForm<SignupFormValues>({
     defaultValues: {
       full_name: "",
-      email: "",
+      email_address: "",
       phone_number: "",
-      isVerified: false,
     },
     mode: "onChange",
     resolver: zodResolver(SignupSchema),
@@ -109,14 +108,14 @@ const SignupForm: React.FC<{ props?: string }> = ({ props }) => {
                 </div>
                 <Input
                   id="email"
-                  {...register("email", { required: true })}
+                  {...register("email_address", { required: true })}
                   className="mt-1 border-2 pl-10 border-transparent focus:border-gradient bg-[#363A3D] text-white"
                   type="text"
                   placeholder="example@gmail.com"
                 />
               </div>
               <p className=" text-sm text-red-500 my-1">
-                {errors.email?.message}
+                {errors.email_address?.message}
               </p>
             </div>
             {/* Phone Number */}
