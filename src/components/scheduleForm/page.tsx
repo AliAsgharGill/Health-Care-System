@@ -46,7 +46,7 @@ const ScheduleForm: React.FC = () => {
 
   const form = useForm<AppointmentFormValues>({
     defaultValues: {
-      drName: null,
+      dr_name: "",
       reason: "",
       expectedDate: "",
     },
@@ -99,7 +99,7 @@ const ScheduleForm: React.FC = () => {
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <FormField
             control={control}
-            name="drName"
+            name="dr_name"
             rules={{ required: "Please select a physician" }}
             render={({ field }) => (
               <FormItem>
@@ -107,7 +107,7 @@ const ScheduleForm: React.FC = () => {
                 <FormControl>
                   <Controller
                     control={control}
-                    name="drName"
+                    name="dr_name"
                     render={({ field }) => (
                       <Select
                         {...field}
@@ -132,7 +132,7 @@ const ScheduleForm: React.FC = () => {
                     )}
                   />
                 </FormControl>
-                <FormMessage>{errors.drName?.message}</FormMessage>
+                <FormMessage>{errors.dr_name?.message}</FormMessage>
               </FormItem>
             )}
           />

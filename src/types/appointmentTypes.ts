@@ -1,8 +1,9 @@
 export type AppointmentFormValues = {
-    drName: { value: string; label: string; image: string } | null;
+    dr_name: string;
     reason: string;
     additionalComments: string;
     expectedDate: string;
+    status: string;
   };
 
 export  type PhysicianOption = {

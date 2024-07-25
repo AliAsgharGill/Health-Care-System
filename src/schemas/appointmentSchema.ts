@@ -1,16 +1,13 @@
 import { z } from "zod";
 
-const physicianOptionSchema = z.object({
-  value: z.string(),
-  label: z.string(),
-  image: z.string().url(),
-});
+
 
 const appointmentSchema = z.object({
-  drName: physicianOptionSchema,
+  dr_name: z.string().min(1, "Dr Name is required"),
   reason: z.string().min(1, "Reason is required"),
   additionalComments: z.string().optional(),
-  expectedDate: z.string().min(1, "Expected date is required"), 
+  expectedDate: z.string().min(1, "Expected date is required"),
+  status: z.string().optional(),
 });
 
-export { appointmentSchema, physicianOptionSchema };
+export { appointmentSchema };

@@ -47,10 +47,11 @@ const AppointmentForm: React.FC = () => {
 
   const form = useForm<AppointmentFormValues>({
     defaultValues: {
-      drName: null,
+      dr_name: "",
       reason: "",
       additionalComments: "",
       expectedDate: "",
+      status: "pending",
     },
     mode: "onChange",
   });
@@ -63,14 +64,19 @@ const AppointmentForm: React.FC = () => {
   } = form;
 
   const onSubmit: SubmitHandler<AppointmentFormValues> = async (data) => {
-    console.log(data);
+    const transformedData = {
+      ...data,
+      dr_name: data.dr_name.value,
+    };
+
+    console.log(transformedData);
 
     setIsSubmitting(true);
 
     try {
       await axios.post<AppointmentFormValues>(
-        "https://65784a9df08799dc8044d036.mockapi.io/CRUD",
-        data
+        "http://127.0.0.1:8000/appointments/",
+        transformedData
       );
       toast({
         description: "Please verify OTP sent to your phone number!",
@@ -102,7 +108,7 @@ const AppointmentForm: React.FC = () => {
         <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <FormField
             control={control}
-            name="drName"
+            name="dr_name"
             rules={{ required: "Please select a physician" }}
             render={({ field }) => (
               <FormItem>
@@ -110,7 +116,7 @@ const AppointmentForm: React.FC = () => {
                 <FormControl>
                   <Controller
                     control={control}
-                    name="drName"
+                    name="dr_name"
                     render={({ field }) => (
                       <Select
                         {...field}
@@ -135,7 +141,7 @@ const AppointmentForm: React.FC = () => {
                     )}
                   />
                 </FormControl>
-                <FormMessage>{errors.drName?.message}</FormMessage>
+                <FormMessage>{errors.dr_name?.message}</FormMessage>
               </FormItem>
             )}
           />

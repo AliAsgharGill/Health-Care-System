@@ -1,11 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.appointments import appointments_router
 from api.doctors import get_doctors
 from api.users import user_router
-
 
 def make_middlewares():
     middlewawre = [
@@ -19,6 +18,7 @@ def make_middlewares():
     ]
 
     return middlewawre
+
 
 app = FastAPI(middleware=make_middlewares())
 
