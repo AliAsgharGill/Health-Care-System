@@ -65,6 +65,7 @@ def get_user_by_id(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
 
+
 def login_user(db: Session, user: LoginUser):
     db_user = db.query(User).filter(User.email_address == user.email_address).first()
     if not db_user:

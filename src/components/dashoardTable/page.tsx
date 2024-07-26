@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -26,29 +26,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { appointments } from "../../../public/assets/data/appointments";
+// import { appointments } from "../../../public/assets/data/appointments";
 import ScheduleForm from "../scheduleForm/page";
 import CancellationForm from "../cancalationForm/page";
+import axios from "axios";
 
 const rowsPerPage = 4;
 
 export function DashboardTable() {
-  // const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   // here we need to get data when page get load
-  // useEffect(() => {
-  //   const fetchAppointments = async () => {
-  //     try {
-  //       const response = await axios.get("http://127.0.0.1:8000/appointments/");
-  //       console.log("Response:", response.data);
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios .get("http://127.0.0.1:8000/appointments/");
+        console.log("Response:", response.data);
 
-  //       setAppointments(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching appointments:", error);
-  //     }
-  //   };
+        setAppointments(response.data);
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
+    };
 
-  //   fetchAppointments();
-  // }, []);
+    fetchAppointments();
+  }, []);
 
   const [currentScheduleId, setCurrentScheduleId] = useState<number | null>(
     null

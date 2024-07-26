@@ -18,5 +18,5 @@ class Appointments(Base):
     reason = Column(String, nullable=True)
     additionalComments = Column(String, nullable=True)
     expectedDate = Column(String, nullable=True)
-    patient_name = Column(String, nullable=False)
+    patient_name = Column(String, nullable=True)
     status = Column(Enum(status), nullable=True)

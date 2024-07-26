@@ -6,7 +6,7 @@ from core.database.session import Base
 class Doctor(Base):
     __tablename__ = "doctors"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
+    name = Column(String, unique=True)
     image_url = Column(String)
 
     def __repr__(self):
