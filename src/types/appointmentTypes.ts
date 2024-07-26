@@ -4,6 +4,7 @@ export type AppointmentFormValues = {
     additionalComments: string;
     expectedDate: string;
     status: string;
+    patient_name:string
   };
 
 export  type PhysicianOption = {

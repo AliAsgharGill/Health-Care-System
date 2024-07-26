@@ -33,6 +33,23 @@ import CancellationForm from "../cancalationForm/page";
 const rowsPerPage = 4;
 
 export function DashboardTable() {
+  // const [appointments, setAppointments] = useState([]);
+  // here we need to get data when page get load
+  // useEffect(() => {
+  //   const fetchAppointments = async () => {
+  //     try {
+  //       const response = await axios.get("http://127.0.0.1:8000/appointments/");
+  //       console.log("Response:", response.data);
+
+  //       setAppointments(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching appointments:", error);
+  //     }
+  //   };
+
+  //   fetchAppointments();
+  // }, []);
+
   const [currentScheduleId, setCurrentScheduleId] = useState<number | null>(
     null
   );

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import {
   Form,
@@ -31,19 +31,37 @@ import {
 import { cn } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Loader } from "lucide-react";
-import { physicianOptions } from "../../../public/assets/data/userFormData";
 import OtpForm from "../otpForm/page";
+// import { physicianOptions } from "../../../public/assets/data/userFormData";
 
 type PhysicianOption = {
-  value: string;
-  label: string;
-  image: string;
+  name: string;
+  image_url: string;
 };
 
 const AppointmentForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [physicianOptions, setPhysicianOptions] = useState([]);
+  // here we need to get data when page get load
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/doctors/?skip=0&limit=100"
+        );
+        console.log("Response:", response.data);
+
+        setPhysicianOptions(response.data);
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
 
   const form = useForm<AppointmentFormValues>({
     defaultValues: {
@@ -52,6 +70,7 @@ const AppointmentForm: React.FC = () => {
       additionalComments: "",
       expectedDate: "",
       status: "pending",
+      patient_name: "",
     },
     mode: "onChange",
   });
@@ -63,10 +82,13 @@ const AppointmentForm: React.FC = () => {
     control,
   } = form;
 
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIwODI2ODMsInVzZXJfaWQiOjF9.CC3k1XtZ_-5yZ4idNIgbpJd_dXKoLyJ4FT7kbVpHObU";
+
   const onSubmit: SubmitHandler<AppointmentFormValues> = async (data) => {
     const transformedData = {
       ...data,
-      dr_name: data.dr_name.value,
+      dr_name: data.dr_name.name,
     };
 
     console.log(transformedData);
@@ -76,7 +98,12 @@ const AppointmentForm: React.FC = () => {
     try {
       await axios.post<AppointmentFormValues>(
         "http://127.0.0.1:8000/appointments/",
-        transformedData
+        transformedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       toast({
         description: "Please verify OTP sent to your phone number!",
@@ -126,12 +153,12 @@ const AppointmentForm: React.FC = () => {
                             style={{ display: "flex", alignItems: "center" }}
                           >
                             <Image
-                              src={option.image}
-                              alt={option.label}
+                              src={option.image_url}
+                              alt={option.name}
                               height={24}
                               width={24}
                             />
-                            {option.label}
+                            {option.name}
                           </div>
                         )}
                         getOptionValue={(option: PhysicianOption) =>
@@ -145,6 +172,33 @@ const AppointmentForm: React.FC = () => {
               </FormItem>
             )}
           />
+          {/* here we will get patient_name */}
+          <FormField
+            control={control}
+            name="patient_name"
+            rules={{ required: "Please enter patient name" }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-[#ABB8C4]">Patient</FormLabel>
+                <FormControl>
+                  <Controller
+                    control={control}
+                    name="patient_name"
+                    render={({ field }) => (
+                      <Input
+                        id="patient_name"
+                        className="mt-1 w-full outline-[#0a95ff] border-2 border-transparent focus:border-gradient bg-[#363A3D] text-white"
+                        type="text"
+                        placeholder="Patient name"
+                        {...field}
+                      />
+                    )}
+                  />
+                </FormControl>
+                <FormMessage>{errors.patient_name?.message}</FormMessage>
+              </FormItem>
+            )}
+          />
 
           <div className="grid grid-cols-2 gap-4 mt-3 ">
             <FormField
@@ -152,7 +206,7 @@ const AppointmentForm: React.FC = () => {
               name="reason"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reason</FormLabel>
+                  <FormLabel className="text-[#ABB8C4]">Reason</FormLabel>
                   <FormControl>
                     <Textarea
                       className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white placeholder:text-[#76828D]"
@@ -174,10 +228,12 @@ const AppointmentForm: React.FC = () => {
               name="additionalComments"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Additional Comments</FormLabel>
+                  <FormLabel className="text-[#ABB8C4]">
+                    Additional Comments
+                  </FormLabel>
                   <FormControl>
                     <Textarea
-                      className="mt-1 border-2 pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white placeholder:text-[#76828D]"
+                      className="mt-1 border-2 pl-10pl-10 border-transparent active:border-gradient bg-[#363A3D] text-white placeholder:text-[#76828D]"
                       type="text"
                       placeholder="ex: Prefer afternoon appointments, if possible"
                       {...field}
@@ -197,13 +253,15 @@ const AppointmentForm: React.FC = () => {
             rules={{ required: "Please select an expected date" }}
             render={({ field }) => (
               <FormItem>
+                <FormLabel className="text-[#ABB8C4]">Select date</FormLabel>
+
                 <FormControl>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-whit w-[280px] justify-start text-left font-normal w-full",
+                          " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-[#ABB8C4] justify-start text-left font-normal w-full",
                           !date && "text-muted-foreground"
                         )}
                       >
@@ -233,7 +291,7 @@ const AppointmentForm: React.FC = () => {
                           <SelectItem value="7">In a week</SelectItem>
                         </SelectContent>
                       </UISelect>
-                      <div className="rounded-md border bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-white ">
+                      <div className="rounded-md border bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-[#ABB8C4] ">
                         <Calendar
                           mode="single"
                           selected={date}

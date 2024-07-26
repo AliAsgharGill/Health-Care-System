@@ -16,4 +16,4 @@ class AuthenticationRequired:
         token: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
     ):
         if not token:
-            raise AuthenticationRequiredException()
+            raise AuthenticationRequiredException("Token Required")

@@ -7,4 +7,5 @@ class AppointmentResponseSchema(BaseModel):
     reason: str
     additionalComments: str
     expectedDate: str
+    patient_name:str
     status: str

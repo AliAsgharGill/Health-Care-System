@@ -36,7 +36,7 @@ class AuthBackend(AuthenticationBackend):
         try:
             payload = jwt.decode(
                 token,
-                config.SECRET_KEY,
+                config.JWT_TOKEN_SECRET,
                 algorithms=[config.JWT_ALGORITHM],
             )
             user_id = payload.get("user_id")

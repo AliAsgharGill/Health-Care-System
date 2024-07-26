@@ -31,6 +31,7 @@ def update_appointment_by_id(
     db_appointment.additionalComments = appointment.additionalComments
     db_appointment.expectedDate = appointment.expectedDate
     db_appointment.status = appointment.status
+    db_appointment.patient_name = appointment.patient_name
     db.commit()
     db.refresh(db_appointment)
     return db_appointment
