@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.crud.doctors import add_doctor, get_all_doctors
 from app.schemas.requests.doctors import DoctorsSchema
 from core.database.session import get_db
+from core.fastapi.dependencies.authentication import AuthenticationRequired
+
 
 get_doctors = APIRouter()
 
@@ -24,7 +26,7 @@ def get_doctors_endpoint(
 
 # Add doctor
 @get_doctors.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=DoctorsSchema
+    "/", status_code=status.HTTP_201_CREATED, response_model=DoctorsSchema, dependencies=[Depends(AuthenticationRequired)]
 )
 def add_doctor_endpoint(doctor: DoctorsSchema, db: Session = Depends(get_db)):
     db_doctor = add_doctor(db, doctor)

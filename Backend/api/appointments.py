@@ -1,17 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.crud.appointments import (
-    create_appointment,
-    delete_appointment_by_id,
-    get_all_appointments,
-    get_appointment_by_id,
-    get_appointments_by_doctor_id,
-    update_appointment_by_id,
-)
+from app.crud.appointments import (create_appointment,
+                                   delete_appointment_by_id,
+                                   get_all_appointments, get_appointment_by_id,
+                                   get_appointments_by_doctor_id,
+                                   update_appointment_by_id)
 from app.schemas.requests.appointments import AppointmentsSchema
 from app.schemas.responses.appointments import AppointmentResponseSchema
 from core.database.session import get_db
+
+from core.fastapi.dependencies.authentication import AuthenticationRequired
 
 appointments_router = APIRouter()
 
@@ -29,7 +28,8 @@ def get_appointments_endpoint(db: Session = Depends(get_db)):
 
 
 @appointments_router.post(
-    "/", status_code=status.HTTP_201_CREATED, response_model=AppointmentResponseSchema
+    "/", status_code=status.HTTP_201_CREATED, response_model=AppointmentResponseSchema,
+    dependencies=[Depends(AuthenticationRequired)]
 )
 def create_appointments_endpoint(
     appointments: AppointmentsSchema, db: Session = Depends(get_db)
@@ -56,6 +56,7 @@ def get_appointments_by_id_endpoint(appointment_id: int, db: Session = Depends(g
     "/{appointment_id}",
     status_code=status.HTTP_200_OK,
     response_model=AppointmentResponseSchema,
+    dependencies=[Depends(AuthenticationRequired)]
 )
 def update_appointments_by_id_endpoint(
     appointment_id: int, appointment: AppointmentsSchema, db: Session = Depends(get_db)
@@ -68,7 +69,7 @@ def update_appointments_by_id_endpoint(
     return db_appointments
 
 
-@appointments_router.delete("/{appointment_id}")
+@appointments_router.delete("/{appointment_id}", dependencies=[Depends(AuthenticationRequired)])
 def delete_appointments_by_id_endpoint(
     appointment_id: int, db: Session = Depends(get_db)
 ):

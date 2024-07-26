@@ -24,7 +24,7 @@ target_metadata = Base.metadata
 def run_migrations_offline():
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=app_config.SQLITE3,
+        url=app_config.POST_GRESQL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -42,7 +42,7 @@ def do_run_migrations(connection):
 
 
 def run_migrations_online():
-    connectable = create_engine(app_config.SQLITE3)
+    connectable = create_engine(app_config.POST_GRESQL)
 
     with connectable.connect() as connection:
         do_run_migrations(connection)

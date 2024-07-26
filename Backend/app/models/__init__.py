@@ -1,8 +1,8 @@
 from core.database.session import Base
 
+from .appointments import Appointments
 from .doctors import Doctor
 from .user import User
-from .appointments import Appointments
 
 __all__ = [
     "Base",

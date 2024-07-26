@@ -15,8 +15,9 @@ class BaseConfig(BaseSettings):
 class Config(BaseConfig):
     # name in the getenv must be same as in the .env file
     SQLITE3: str = os.getenv("SQLITE3")
+    POST_GRESQL: str = os.getenv("POST_GRESQL")
     JWT_EXPIRE_MINUTES: int = 60 * 24
-    JWT_SECRET_KEY: str = os.getenv("SECRET_KEY")
+    JWT_TOKEN_SECRET: str = os.getenv("JWT_TOKEN_SECRET")
     JWT_ALGORITHM: str = "HS256"
 
 

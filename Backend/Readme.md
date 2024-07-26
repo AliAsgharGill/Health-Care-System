@@ -47,3 +47,25 @@ config = Config()
 ```
 
 ## Authentication and Authorization
+
+## Step1: _Make middleware in core-> fastapi -> **middlewares** -> make new file with name authentication.py get data from the following url_
+
+```
+https://github.com/iam-abbas/FastAPI-Production-Boilerplate/blob/main/core/fastapi/middlewares/authentication.py
+```
+
+## Step2: _Make middleware in core-> fastapi -> **dependencies** -> make new file with name authentication.py get data from the following url_
+
+```
+https://github.com/iam-abbas/FastAPI-Production-Boilerplate/blob/main/core/fastapi/dependencies/authentication.py
+```
+
+### Step3: *To add exceptions in core => exceptions make new file with name **base.py** get data form the following url*
+```
+https://github.com/iam-abbas/FastAPI-Production-Boilerplate/blob/main/core/exceptions/base.py
+```
+## Step2: *To add current user in core-> fastapi -> **dependencies** -> make new file with name **current_user.py** get data from the following url_
+```
+https://github.com/iam-abbas/FastAPI-Production-Boilerplate/blob/main/core/fastapi/dependencies/current_user.py
+```
+
