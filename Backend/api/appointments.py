@@ -27,11 +27,10 @@ def get_appointments_endpoint(db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="appointments not found"
         )
-    content = []
+    # content = []
     for appointment in appointments:
         doctor = get_doctor_by_name(db=db, dr_name=appointment.dr_name)
-        response = {
-            "appointment": {"id": appointment.id,
+        response = {"id": appointment.id,
                             "patient_name": appointment.patient_name,
                             "reason": appointment.reason,
                             "additionalComments": appointment.additionalComments,
@@ -39,11 +38,10 @@ def get_appointments_endpoint(db: Session = Depends(get_db)):
                             "status": str(appointment.status.name),
                             "doctor": {"id": doctor.id, "name": doctor.name, "image_url": doctor.image_url,}},
  
-        }
-        content.append(response)
+        # content.append(response)
 
 
-    return JSONResponse(status_code=200, content=content)
+    return JSONResponse(status_code=200, content=response)
 
 
 @appointments_router.post(

@@ -26,7 +26,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-// import { appointments } from "../../../public/assets/data/appointments";
 import ScheduleForm from "../scheduleForm/page";
 import CancellationForm from "../cancalationForm/page";
 import axios from "axios";
@@ -35,13 +34,15 @@ const rowsPerPage = 4;
 
 export function DashboardTable() {
   const [appointments, setAppointments] = useState([]);
-  // here we need to get data when page get load
+  const [currentScheduleId, setCurrentScheduleId] = useState<number | null>(
+    null
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios .get("http://127.0.0.1:8000/appointments/");
-        console.log("Response:", response.data);
-
+        const response = await axios.get("http://127.0.0.1:8000/appointments/");
         setAppointments(response.data);
       } catch (error) {
         console.error("Error fetching appointments:", error);
@@ -50,11 +51,8 @@ export function DashboardTable() {
 
     fetchAppointments();
   }, []);
-
-  const [currentScheduleId, setCurrentScheduleId] = useState<number | null>(
-    null
-  );
-  const [currentPage, setCurrentPage] = useState(1);
+  console.log("appointments:", appointments);
+  
 
   const totalPages = Math.ceil(appointments.length / rowsPerPage);
 
@@ -97,7 +95,6 @@ export function DashboardTable() {
                   disabled={currentPage === 1}
                 />
               </PaginationItem>
-
               <PaginationItem>
                 <PaginationNext
                   className="text-[#24AE7C]"
@@ -125,13 +122,15 @@ export function DashboardTable() {
               className="even:bg-[#1C2023] flex items-center justify-between w-full"
             >
               <TableCell className="font-medium flex-1">
-                {appointment.name}
+                {appointment.patient_name}
               </TableCell>
-              <TableCell className="flex-1">{appointment.date}</TableCell>
+              <TableCell className="flex-1">
+                {new Date(appointment.expectedDate).toLocaleDateString()}
+              </TableCell>
               <TableCell className="flex-1">{appointment.status}</TableCell>
               <TableCell className="flex items-center flex-1">
                 <Image
-                  src={appointment.doctor.image}
+                  src={appointment.doctor.image_url}
                   alt="doctor"
                   width={50}
                   height={50}
@@ -146,7 +145,7 @@ export function DashboardTable() {
                       className="font-semibold mr-2 text-[#24AE7C]"
                       onClick={() => handleSchedule(appointment.id)}
                     >
-                      {appointment.actions.schedule}
+                      Schedule
                     </Button>
                   </DialogTrigger>
                   {currentScheduleId === appointment.id && (
@@ -161,17 +160,19 @@ export function DashboardTable() {
                         <DialogDescription>
                           Schedule appointment for{" "}
                           <span className="text-[#24AE7C] font-semibold">
-                            {appointment.date}
+                            {new Date(
+                              appointment.expectedDate
+                            ).toLocaleDateString()}
                           </span>{" "}
                           with{" "}
                           <span className="text-[#24AE7C] font-semibold">
-                            {appointment.doctor.name}.
+                            {appointment.doctor.name}
                           </span>
-                          {/* Schedule Form */}
+                          .
                           <ScheduleForm />
                         </DialogDescription>
                         <DialogDescription>
-                          Please fill the details to schedule
+                          Please fill in the details to schedule.
                         </DialogDescription>
                       </DialogHeader>
                     </DialogContent>
@@ -184,7 +185,7 @@ export function DashboardTable() {
                       className="font-semibold"
                       onClick={() => handleSchedule(appointment.id)}
                     >
-                      {appointment.actions.cancel}
+                      Cancel
                     </Button>
                   </DialogTrigger>
                   {currentScheduleId === appointment.id && (
@@ -194,11 +195,10 @@ export function DashboardTable() {
                     >
                       <DialogHeader>
                         <DialogTitle className="text-2xl text-white">
-                          Cancel Appointment{" "}
+                          Cancel Appointment
                         </DialogTitle>
                         <DialogDescription className="text-[#ABB8C4]">
-                          Are you sure you want to cancel your appointment
-                          {/* Cancel Form */}
+                          Are you sure you want to cancel your appointment?
                           <CancellationForm />
                         </DialogDescription>
                       </DialogHeader>
