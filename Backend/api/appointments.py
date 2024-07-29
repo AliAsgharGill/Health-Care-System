@@ -118,7 +118,7 @@ def patch_appointments_by_id_endpoint(
     db_appointments = patch_appointment(db, appointment_id, appointment)
     if not db_appointments:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="appointment not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Appointment not found"
         )
     return db_appointments
 
@@ -129,7 +129,7 @@ def delete_appointments_by_id_endpoint(
     db_appointments = delete_appointment_by_id(db, appointment_id)
     if not db_appointments:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="appointment not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Appointment not found"
         )
     return {"message": "deleted successfully"}
 
