@@ -44,6 +44,7 @@ export function DashboardTable() {
       try {
         const response = await axios.get("http://127.0.0.1:8000/appointments/");
         setAppointments(response.data);
+        console.log("Data coming:",response.data);
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 
+from app.crud.appointments import get_all_doctors
 from app.crud.appointments import (create_appointment,
                                    delete_appointment_by_id,
                                    get_all_appointments, get_appointment_by_id,
@@ -27,21 +28,38 @@ def get_appointments_endpoint(db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="appointments not found"
         )
-    # content = []
+    
+    response_content = []
     for appointment in appointments:
         doctor = get_doctor_by_name(db=db, dr_name=appointment.dr_name)
-        response = {"id": appointment.id,
-                            "patient_name": appointment.patient_name,
-                            "reason": appointment.reason,
-                            "additionalComments": appointment.additionalComments,
-                            "expectedDate": appointment.expectedDate,
-                            "status": str(appointment.status.name),
-                            "doctor": {"id": doctor.id, "name": doctor.name, "image_url": doctor.image_url,}},
- 
-        # content.append(response)
+        if doctor:
+            response = {
+                "id": appointment.id,
+                "patient_name": appointment.patient_name,
+                "reason": appointment.reason,
+                "additionalComments": appointment.additionalComments,
+                "expectedDate": appointment.expectedDate,
+                "status": str(appointment.status.name),
+                "doctor": {
+                    "id": doctor.id,
+                    "name": doctor.name,
+                    "image_url": doctor.image_url,
+                }
+            }
+            response_content.append(response)
+        else:
+            response = {
+                "id": appointment.id,
+                "patient_name": appointment.patient_name,
+                "reason": appointment.reason,
+                "additionalComments": appointment.additionalComments,
+                "expectedDate": appointment.expectedDate,
+                "status": str(appointment.status.name),
+                "doctor": None
+            }
+            response_content.append(response)
 
-
-    return JSONResponse(status_code=200, content=response)
+    return JSONResponse(status_code=200, content=response_content)
 
 
 @appointments_router.post(
@@ -54,7 +72,7 @@ def create_appointments_endpoint(
     db_appointments = create_appointment(db, appointments)
     return db_appointments
 
-
+    
 @appointments_router.get(
     "/{appointment_id}",
     status_code=status.HTTP_200_OK,

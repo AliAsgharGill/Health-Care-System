@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.appointments import Appointments as appointments
+from app.models.doctors import Doctor
 from app.schemas.requests.appointments import AppointmentsSchema
 
 
@@ -15,6 +16,9 @@ def create_appointment(db: Session, appointment: AppointmentsSchema):
 def get_all_appointments(db: Session, skip: int = 0, limit: int = 100):
     return db.query(appointments).offset(skip).limit(limit).all()
 
+# we need to import doctors here
+def get_all_doctors(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Doctor).offset(skip).limit(limit).all()
 
 def get_appointment_by_id(db: Session, appointment_id: int):
     return db.query(appointments).filter(appointments.id == appointment_id).first()
