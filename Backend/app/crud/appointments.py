@@ -41,6 +41,27 @@ def update_appointment_by_id(
     return db_appointment
 
 
+# patch request
+
+def patch_appointment(db: Session, appointment_id: int, appointment: AppointmentsSchema):
+    db_appointment = db.query(appointments).filter(appointments.id == appointment_id).first()
+    if appointment.dr_name is not None:
+        db_appointment.dr_name = appointment.dr_name
+    if appointment.reason is not None:
+        db_appointment.reason = appointment.reason
+    if appointment.additionalComments is not None:
+        db_appointment.additionalComments = appointment.additionalComments
+    if appointment.expectedDate is not None:
+        db_appointment.expectedDate = appointment.expectedDate
+    if appointment.status is not None:
+        db_appointment.status = appointment.status
+    if appointment.patient_name is not None:
+        db_appointment.patient_name = appointment.patient_name
+    db.commit()
+    db.refresh(db_appointment)
+    return db_appointment
+
+
 def delete_appointment_by_id(db: Session, appointment_id: int):
     db.query(appointments).filter(appointments.id == appointment_id).delete()
     db.commit()

@@ -6,9 +6,10 @@ from app.models.appointments import status
 
 
 class AppointmentsSchema(BaseModel):
-    dr_name: str
-    reason: str
-    additionalComments: str
-    expectedDate: str
-    patient_name: str
+    dr_name: str | None = None
+    reason: str | None = None
+    additionalComments: str | None = None
+    expectedDate: str | None = None
+    patient_name: str | None = None
     status: str = status.pending
+    

@@ -7,7 +7,8 @@ from app.crud.appointments import (create_appointment,
                                    delete_appointment_by_id,
                                    get_all_appointments, get_appointment_by_id,
                                    get_appointments_by_doctor_id,
-                                   update_appointment_by_id)
+                                   update_appointment_by_id,
+                                   patch_appointment)
 from app.schemas.requests.appointments import AppointmentsSchema
 from app.schemas.responses.appointments import AppointmentResponseSchema
 from core.database.session import get_db
@@ -104,6 +105,23 @@ def update_appointments_by_id_endpoint(
     return db_appointments
 
 
+# patch appointment
+@appointments_router.patch(
+    "/{appointment_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=AppointmentResponseSchema,
+    dependencies=[Depends(AuthenticationRequired)]
+)
+def patch_appointments_by_id_endpoint(
+    appointment_id: int, appointment: AppointmentsSchema, db: Session = Depends(get_db)
+):
+    db_appointments = patch_appointment(db, appointment_id, appointment)
+    if not db_appointments:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="appointment not found"
+        )
+    return db_appointments
+
 @appointments_router.delete("/{appointment_id}", dependencies=[Depends(AuthenticationRequired)])
 def delete_appointments_by_id_endpoint(
     appointment_id: int, db: Session = Depends(get_db)
@@ -114,7 +132,6 @@ def delete_appointments_by_id_endpoint(
             status_code=status.HTTP_404_NOT_FOUND, detail="appointment not found"
         )
     return {"message": "deleted successfully"}
-
 
 @appointments_router.get(
     "/doctor/{doctor_id}",
