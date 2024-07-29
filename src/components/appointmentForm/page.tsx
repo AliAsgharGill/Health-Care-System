@@ -32,7 +32,6 @@ import { cn } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Loader } from "lucide-react";
 import OtpForm from "../otpForm/page";
-// import { physicianOptions } from "../../../public/assets/data/userFormData";
 
 type PhysicianOption = {
   name: string;
@@ -65,6 +64,7 @@ const AppointmentForm: React.FC = () => {
 
   const form = useForm<AppointmentFormValues>({
     defaultValues: {
+      id:""
       dr_name: "",
       reason: "",
       additionalComments: "",

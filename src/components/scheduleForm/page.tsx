@@ -1,10 +1,8 @@
-"use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -12,7 +10,10 @@ import {
 } from "../ui/form";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
-import { AppointmentFormValues } from "@/types/appointmentTypes";
+import {
+  AppointmentFormValues,
+  PhysicianOption,
+} from "@/types/appointmentTypes";
 import axios from "axios";
 import { toast } from "../ui/use-toast";
 import { Button } from "../ui/button";
@@ -31,18 +32,22 @@ import {
 import { cn } from "@/lib/utils";
 import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Loader } from "lucide-react";
-import { physicianOptions } from "../../../public/assets/data/userFormData";
-import OtpForm from "../otpForm/page";
-
-type PhysicianOption = {
-  value: string;
-  label: string;
-  image: string;
-};
 
 const ScheduleForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [physicianOptions, setPhysicianOptions] = useState<PhysicianOption[]>(
+    []
+  );
+
+  useEffect(() => {
+    axios
+      .get<PhysicianOption[]>("http://127.0.0.1:8000/doctors/?skip=0&limit=100")
+      .then((response) => {
+        setPhysicianOptions(response.data);
+        console.log("Physician Options:", response.data);
+      });
+  }, []);
 
   const form = useForm<AppointmentFormValues>({
     defaultValues: {
@@ -61,14 +66,20 @@ const ScheduleForm: React.FC = () => {
   } = form;
 
   const onSubmit: SubmitHandler<AppointmentFormValues> = async (data) => {
-    console.log(data);
+    // Only the physician's name should be sent
+    const payload = {
+      ...data,
+      dr_name: form.getValues("dr_name"),
+    };
+
+    console.log(payload);
 
     setIsSubmitting(true);
 
     try {
       await axios.post<AppointmentFormValues>(
-        "https://65784a9df08799dc8044d036.mockapi.io/CRUD",
-        data
+        `http://127.0.0.1:8000/appointments/`,
+        payload
       );
       toast({
         description: "Successfully scheduled appointment!",
@@ -117,17 +128,22 @@ const ScheduleForm: React.FC = () => {
                             style={{ display: "flex", alignItems: "center" }}
                           >
                             <Image
-                              src={option.image}
-                              alt={option.label}
+                              src={option.image_url}
+                              alt={option.name}
                               height={24}
                               width={24}
                             />
-                            {option.label}
+                            {option.name}
                           </div>
                         )}
                         getOptionValue={(option: PhysicianOption) =>
-                          option.value
+                          option.name // Use name as the value
                         }
+                        onChange={(selectedOption) => {
+                          if (selectedOption) {
+                            form.setValue("dr_name", selectedOption.name);
+                          }
+                        }}
                       />
                     )}
                   />
@@ -164,7 +180,9 @@ const ScheduleForm: React.FC = () => {
             rules={{ required: "Please select an expected date" }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mt-1 ">Expected appointment date</FormLabel>
+                <FormLabel className="mt-1 ">
+                  Expected appointment date
+                </FormLabel>
 
                 <FormControl>
                   <Popover>
@@ -172,7 +190,7 @@ const ScheduleForm: React.FC = () => {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-whit w-[280px] justify-start text-left font-normal w-full",
+                          " bg-[#1A1D21] border-[#363A3D] placeholder:text-[#76828D] text-whit justify-start text-left font-normal w-full",
                           !date && "text-muted-foreground"
                         )}
                       >
